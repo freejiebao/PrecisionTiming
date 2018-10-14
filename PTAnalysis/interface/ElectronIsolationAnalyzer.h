@@ -69,13 +69,16 @@ struct eventInfo {
     vector<float> track_eta;
     vector<float> track_phi;
     vector<float> track_dz;
+    vector<float> track_dz_t;
     vector<float> track_t;
-
-    float vtxGen_z;
-    float vtxGen_t;
-    //float         vtx3D_z;
+    float         vtxGen_z;
+    float         vtxGen_t;
+    float         vtx3D_z;
     float         vtx_z;
     float         vtx_t;
+    // -- store the dr between the electron and pfCand, the use it to find the dr of veto cone.
+    vector<float> drep;
+    vector<float> drep_t;
     vector<float> electron_pt;
     vector<float> electron_eta;
     vector<float> electron_phi;
@@ -90,6 +93,7 @@ struct eventInfo {
 class ElectronIsolationAnalyzer : public edm::EDAnalyzer {
 public:
     typedef ROOT::Math::PositionVector3D<ROOT::Math::Cartesian3D<float>, ROOT::Math::DefaultCoordinateSystemTag> genXYZ;
+
     explicit ElectronIsolationAnalyzer(const edm::ParameterSet&);
     ~ElectronIsolationAnalyzer();
 
@@ -103,19 +107,17 @@ private:
     void initEventStructure();
 
     //---inputs
-    //--- to get the 4D info from AOD
-    EDGetTokenT<genXYZ> genXYZToken_;
-    EDGetTokenT<float>  genT0Token_;
-    //---to get the 4D info from AOD
-    EDGetTokenT<vector<PileupSummaryInfo>> PileUpToken_;
-    //EDGetTokenT<View<reco::Vertex>>           vertexToken3D_;
-    EDGetTokenT<View<reco::Vertex>>              vertexToken4D_;
-    EDGetTokenT<edm::View<pat::PackedCandidate>> pfcandToken_;
-    EDGetTokenT<View<reco::GenParticle>>         genPartToken_;
-    //EDGetTokenT<vector<SimVertex>>            genVertexToken_;
-    EDGetTokenT<View<reco::GenJet>>  genJetsToken_;
-    EDGetTokenT<View<pat::Electron>> barrelElectronsToken_;
-    EDGetTokenT<View<pat::Electron>> endcapElectronsToken_;
+    EDGetTokenT<genXYZ>                       genXYZToken_;
+    EDGetTokenT<float>                        genT0Token_;
+    EDGetTokenT<vector<PileupSummaryInfo>>    PileUpToken_;
+    EDGetTokenT<View<reco::Vertex>>           vertexToken3D_;
+    EDGetTokenT<View<reco::Vertex>>           vertexToken4D_;
+    EDGetTokenT<edm::View<reco::PFCandidate>> pfcandToken_;
+    EDGetTokenT<View<reco::GenParticle>>      genPartToken_;
+    EDGetTokenT<vector<SimVertex>>            genVertexToken_;
+    EDGetTokenT<View<reco::GenJet>>           genJetsToken_;
+    EDGetTokenT<View<reco::GsfElectron>>      barrelElectronsToken_;
+    EDGetTokenT<View<reco::GsfElectron>>      endcapElectronsToken_;
 
     //--- outputs
     edm::Service<TFileService> fs_;
