@@ -69,22 +69,27 @@ struct eventInfo {
     vector<float> track_eta;
     vector<float> track_phi;
     vector<float> track_dz;
-    vector<float> track_dz_t;
+    vector<float> track_dz3D;
     vector<float> track_t;
-    float         vtxGen_z;
-    float         vtxGen_t;
-    float         vtx3D_z;
-    float         vtx_z;
-    float         vtx_t;
+
+    float vtxGen_z;
+    float vtxGen_t;
+    float vtx3D_z;
+    float vtx_z;
+    float vtx_t;
+
     // -- store the dr between the electron and pfCand, the use it to find the dr of veto cone.
     vector<float> drep;
-    vector<float> drep_t;
     vector<float> electron_pt;
     vector<float> electron_eta;
     vector<float> electron_phi;
     vector<float> electron_sigmaIetaIeta;
-    vector<float> electron_isMatchedToGen;
-    vector<float> electron_isMatchedToGenJet;
+    vector<float> electron_dz3D;
+    vector<float> electron_dxy3D;
+    vector<float> electron_dz4D;
+    vector<float> electron_dxy4D;
+    vector<bool>  electron_isPrompt;
+    vector<bool>  electron_isMatchedToGenJet;
     vector<float> electron_r9;
     vector<float> electron_chIso[10];
     vector<float> electron_chIso_dT[10][10];
@@ -93,7 +98,6 @@ struct eventInfo {
 class ElectronIsolationAnalyzer : public edm::EDAnalyzer {
 public:
     typedef ROOT::Math::PositionVector3D<ROOT::Math::Cartesian3D<float>, ROOT::Math::DefaultCoordinateSystemTag> genXYZ;
-
     explicit ElectronIsolationAnalyzer(const edm::ParameterSet&);
     ~ElectronIsolationAnalyzer();
 
@@ -101,7 +105,7 @@ public:
 
 private:
     virtual void beginJob();
-    virtual void analyze(const edm::Event&, const edm::EventSetup&);
+    virtual void analyze(const edm::Event&, const edm::EventSetup&) override;
     virtual void endJob();
 
     void initEventStructure();
@@ -114,10 +118,10 @@ private:
     EDGetTokenT<View<reco::Vertex>>           vertexToken4D_;
     EDGetTokenT<edm::View<reco::PFCandidate>> pfcandToken_;
     EDGetTokenT<View<reco::GenParticle>>      genPartToken_;
-    EDGetTokenT<vector<SimVertex>>            genVertexToken_;
-    EDGetTokenT<View<reco::GenJet>>           genJetsToken_;
-    EDGetTokenT<View<reco::GsfElectron>>      barrelElectronsToken_;
-    EDGetTokenT<View<reco::GsfElectron>>      endcapElectronsToken_;
+    //EDGetTokenT<vector<SimVertex>>            genVertexToken_;
+    EDGetTokenT<View<reco::GenJet>>      genJetsToken_;
+    EDGetTokenT<View<reco::GsfElectron>> barrelElectronsToken_;
+    EDGetTokenT<View<reco::GsfElectron>> endcapElectronsToken_;
 
     //--- outputs
     edm::Service<TFileService> fs_;
@@ -132,5 +136,5 @@ private:
     float          minDr_;
 };
 
-bool isMatchedToGen(const reco::GsfElectron& electron, const edm::View<reco::GenParticle>& genParticles);
+bool isPromptElectron(const reco::GsfElectron& electron, const edm::View<reco::GenParticle>& genParticles);
 bool isMatchedToGenJet(const reco::GsfElectron& electron, const edm::View<reco::GenJet>& genJet);
