@@ -1,7 +1,7 @@
 from WMCore.Configuration import Configuration
 config = Configuration()
 config.section_("General")
-config.General.requestName   = 'DY-1'
+config.General.requestName   = 'DY_noPU_2J'
 config.General.transferLogs = True
 
 config.section_("JobType")
@@ -12,13 +12,13 @@ config.JobType.psetName    = 'electronIsolationAnalyzer_cfg.py'
 config.JobType.allowUndistributedCMSSW = True
 
 config.section_("Data")
-config.Data.inputDataset = '/DYJetsToLL_M-10to50_TuneCUETP8M1_14TeV-madgraphMLM-pythia8/PhaseIISpr18AODMiniAOD-PU200_93X_upgrade2023_realistic_v5_ext1-v1/AODSIM'
+config.Data.inputDataset = '/DYToLL-M-50_2J_14TeV-madgraphMLM-pythia8/PhaseIISpr18AODMiniAOD-noPU_93X_upgrade2023_realistic_v5-v1/AODSIM'
 config.Data.inputDBS = 'global'
 config.Data.splitting = 'FileBased'
 config.Data.unitsPerJob = 10
 config.Data.totalUnits = -1
 config.Data.publication = False
-config.Data.outputDatasetTag = 'DY-5'
+config.Data.outputDatasetTag = 'DY_noPU_2J'
 
 config.section_("Site")
 config.Site.storageSite = 'T2_CN_Beijing'  #2_CH_CERN'
