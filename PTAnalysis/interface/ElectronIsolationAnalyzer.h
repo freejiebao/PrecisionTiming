@@ -88,6 +88,7 @@ struct eventInfo {
     vector<float> electron_dxy3D;
     vector<float> electron_dz4D;
     vector<float> electron_dxy4D;
+    vector<float> electron_t;
     vector<bool>  electron_isPrompt;
     vector<bool>  electron_isMatchedToGenJet;
     vector<float> electron_r9;
