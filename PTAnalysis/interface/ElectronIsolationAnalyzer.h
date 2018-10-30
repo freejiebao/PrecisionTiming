@@ -91,9 +91,15 @@ struct eventInfo {
     vector<float> electron_t;
     vector<bool>  electron_isPrompt;
     vector<bool>  electron_isMatchedToGenJet;
+    vector<bool>  electron_isMatchedToGenJet2;
     vector<float> electron_r9;
     vector<float> electron_chIso[10];
     vector<float> electron_chIso_dT[10][10];
+
+    vector<int> passVetoId;
+    vector<int> passLooseId;
+    vector<int> passMediumId;
+    vector<int> passTightId;
 };
 
 class ElectronIsolationAnalyzer : public edm::EDAnalyzer {
@@ -119,11 +125,15 @@ private:
     EDGetTokenT<View<reco::Vertex>>           vertexToken4D_;
     EDGetTokenT<edm::View<reco::PFCandidate>> pfcandToken_;
     EDGetTokenT<View<reco::GenParticle>>      genPartToken_;
-    //EDGetTokenT<vector<SimVertex>>            genVertexToken_;
-    EDGetTokenT<View<reco::GenJet>>      genJetsToken_;
-    EDGetTokenT<View<reco::GsfElectron>> barrelElectronsToken_;
-    EDGetTokenT<View<reco::GsfElectron>> endcapElectronsToken_;
-
+    EDGetTokenT<vector<SimVertex>>            genVertexToken_;
+    EDGetTokenT<View<reco::GenJet>>           genJetsToken_;
+    EDGetTokenT<View<reco::GsfElectron>>      barrelElectronsToken_;
+    EDGetTokenT<View<reco::GsfElectron>>      endcapElectronsToken_;
+    // ID decisions objects
+    EDGetTokenT<edm::ValueMap<bool>> eleVetoIdMapToken_;
+    EDGetTokenT<edm::ValueMap<bool>> eleLooseIdMapToken_;
+    EDGetTokenT<edm::ValueMap<bool>> eleMediumIdMapToken_;
+    EDGetTokenT<edm::ValueMap<bool>> eleTightIdMapToken_;
     //--- outputs
     edm::Service<TFileService> fs_;
     TTree*                     eventTree[10];
@@ -135,7 +145,9 @@ private:
     bool           saveTracks_;
     float          maxDz_;
     float          minDr_;
+    bool           isAOD_;
 };
 
 bool isPromptElectron(const reco::GsfElectron& electron, const edm::View<reco::GenParticle>& genParticles);
 bool isMatchedToGenJet(const reco::GsfElectron& electron, const edm::View<reco::GenJet>& genJet);
+bool isMatchedToGenJet2(const reco::GsfElectron& electron, const edm::View<reco::GenJet>& genJets);
