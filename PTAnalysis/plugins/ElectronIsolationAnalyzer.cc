@@ -232,10 +232,11 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
         bool isMatchedJet2 = isMatchedToGenJet2(electron, genJets);
 
         // -- Look up and save the ID decisions
-        bool isPassVeto_   = (*veto_id_decisions)[iele];
-        bool isPassLoose_  = (*loose_id_decisions)[iele];
-        bool isPassMedium_ = (*medium_id_decisions)[iele];
-        bool isPassTight_  = (*tight_id_decisions)[iele];
+        const auto el            = barrelElectrons.ptrAt(i);
+        bool       isPassVeto_   = (*veto_id_decisions)[el];
+        bool       isPassLoose_  = (*loose_id_decisions)[el];
+        bool       isPassMedium_ = (*medium_id_decisions)[el];
+        bool       isPassTight_  = (*tight_id_decisions)[el];
 
         // -- compute charged isolations
         const int nCones = isoConeDR_.size();
@@ -401,10 +402,11 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
         bool isMatchedJet2 = isMatchedToGenJet2(electron, genJets);
 
         // -- Look up and save the ID decisions
-        bool isPassVeto_   = (*veto_id_decisions)[iele];
-        bool isPassLoose_  = (*loose_id_decisions)[iele];
-        bool isPassMedium_ = (*medium_id_decisions)[iele];
-        bool isPassTight_  = (*tight_id_decisions)[iele];
+        const auto el            = endcapElectrons.ptrAt(i);
+        bool       isPassVeto_   = (*veto_id_decisions)[el];
+        bool       isPassLoose_  = (*loose_id_decisions)[el];
+        bool       isPassMedium_ = (*medium_id_decisions)[el];
+        bool       isPassTight_  = (*tight_id_decisions)[el];
 
         // -- compute charged isolations
         const int nCones = isoConeDR_.size();
