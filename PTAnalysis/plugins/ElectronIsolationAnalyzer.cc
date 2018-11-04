@@ -599,7 +599,6 @@ void ElectronIsolationAnalyzer::beginJob() {
         eventTree[iRes]->Branch("passLooseId", &evInfo[iRes].passLooseId);
         eventTree[iRes]->Branch("passMediumId", &evInfo[iRes].passMediumId);
         eventTree[iRes]->Branch("passTightId", &evInfo[iRes].passTightId);
-        eventTree[iRes]->Branch("passHEEPId", &evInfo[iRes].passHEEPId);
 
         for (unsigned int iCone = 0; iCone < isoConeDR_.size(); iCone++) {
             eventTree[iRes]->Branch(Form("electron_chIso%.2d", int(isoConeDR_[iCone] * 10)), &evInfo[iRes].electron_chIso[iCone]);
