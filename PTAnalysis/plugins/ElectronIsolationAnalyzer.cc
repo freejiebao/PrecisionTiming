@@ -236,10 +236,6 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
         bool isPassLoose_  = (*loose_id_decisions)[iele];
         bool isPassMedium_ = (*medium_id_decisions)[iele];
         bool isPassTight_  = (*tight_id_decisions)[iele];
-        passVetoId.push_back((int)isPassVeto_);
-        passLooseId.push_back((int)isPassLoose_);
-        passMediumId.push_back((int)isPassMedium_);
-        passTightId.push_back((int)isPassTight_);
 
         // -- compute charged isolations
         const int nCones = isoConeDR_.size();
@@ -376,6 +372,10 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
             evInfo[iRes].electron_isMatchedToGenJet2.push_back(isMatchedJet2);
             evInfo[iRes].electron_r9.push_back(electron.r9());
             evInfo[iRes].electron_sigmaIetaIeta.push_back(electron.sigmaIetaIeta());
+            evInfo[iRes].passVetoId.push_back((int)isPassVeto_);
+            evInfo[iRes].passLooseId.push_back((int)isPassLoose_);
+            evInfo[iRes].passMediumId.push_back((int)isPassMedium_);
+            evInfo[iRes].passTightId.push_back((int)isPassTight_);
 
             for (unsigned int iCone = 0; iCone < isoConeDR_.size(); iCone++) {
                 (evInfo[iRes].electron_chIso[iCone]).push_back(chIso[iCone]);
