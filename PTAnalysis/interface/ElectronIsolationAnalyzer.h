@@ -70,6 +70,7 @@ struct eventInfo {
     vector<float> track_phi;
     vector<float> track_dz;
     vector<float> track_dz3D;
+    vector<float> track_dz4D;
     vector<float> track_t;
 
     float vtxGen_z;
@@ -84,6 +85,8 @@ struct eventInfo {
     vector<float> electron_eta;
     vector<float> electron_phi;
     vector<float> electron_sigmaIetaIeta;
+    vector<float> electron_dz;
+    vector<float> electron_dxy;
     vector<float> electron_dz3D;
     vector<float> electron_dxy3D;
     vector<float> electron_dz4D;
@@ -95,11 +98,19 @@ struct eventInfo {
     vector<float> electron_r9;
     vector<float> electron_chIso[10];
     vector<float> electron_chIso_dT[10][10];
+    vector<float> electron_chIso_simVtx[10];
+    vector<float> electron_chIso_dT_simVtx[10][10];
+    vector<float> electron_chIso_simVtx[10];
+    vector<float> electron_chIso_dT_4D[10][10];
+    vector<float> electron_chIso_reldZ[10];
+    vector<float> electron_chIso_reldZ_dT[10][10];
+    vector<float> electron_chIso_reldZ_dT_4D[10][10];
 
     vector<int> passVetoId;
     vector<int> passLooseId;
     vector<int> passMediumId;
     vector<int> passTightId;
+    //vector<int> passHEEPId;
 };
 
 class ElectronIsolationAnalyzer : public edm::EDAnalyzer {
@@ -130,10 +141,10 @@ private:
     EDGetTokenT<View<reco::GsfElectron>>      barrelElectronsToken_;
     EDGetTokenT<View<reco::GsfElectron>>      endcapElectronsToken_;
     // ID decisions objects
-    EDGetTokenT<edm::ValueMap<bool>> eleVetoIdMapToken_;
+    /*EDGetTokenT<edm::ValueMap<bool>> eleVetoIdMapToken_;
     EDGetTokenT<edm::ValueMap<bool>> eleLooseIdMapToken_;
     EDGetTokenT<edm::ValueMap<bool>> eleMediumIdMapToken_;
-    EDGetTokenT<edm::ValueMap<bool>> eleTightIdMapToken_;
+    EDGetTokenT<edm::ValueMap<bool>> eleTightIdMapToken_;*/
     //--- outputs
     edm::Service<TFileService> fs_;
     TTree*                     eventTree[10];
@@ -148,6 +159,8 @@ private:
     bool           isAOD_;
 };
 
-bool isPromptElectron(const reco::GsfElectron& electron, const edm::View<reco::GenParticle>& genParticles);
-bool isMatchedToGenJet(const reco::GsfElectron& electron, const edm::View<reco::GenJet>& genJet);
-bool isMatchedToGenJet2(const reco::GsfElectron& electron, const edm::View<reco::GenJet>& genJets);
+bool  isPromptElectron(const reco::GsfElectron& electron, const edm::View<reco::GenParticle>& genParticles);
+bool  isMatchedToGenJet(const reco::GsfElectron& electron, const edm::View<reco::GenJet>& genJet);
+bool  isMatchedToGenJet2(const reco::GsfElectron& electron, const edm::View<reco::GenJet>& genJets);
+float Get_dEtaInSeed(const reco::GsfElectron& ele);
+float Get_epCut(const reco::Candidate& ele);
