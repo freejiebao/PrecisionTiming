@@ -1118,7 +1118,7 @@ bool isMatchedToGenJet2(const reco::GsfElectron& electron, const edm::View<reco:
     return isMatched;
 }
 
-float Get_dEtaInSeed(const reco::GsfElectron& ele) {
+/*float Get_dEtaInSeed(const reco::GsfElectron& ele) {
     return ele.superCluster().isNonnull() && ele.superCluster()->seed().isNonnull() ? ele.deltaEtaSuperClusterTrackAtVtx() - ele.superCluster()->eta() + ele.superCluster()->seed()->eta() : std::numeric_limits<float>::max();
 }
 
@@ -1136,6 +1136,6 @@ int Get_mHitsCut(const reco::Candidate& ele) {
 }
 float Get_hoe(const reco::Candidate& ele) {
     return 0.05 + 1.16 / ESC + 0.0324ρ / ele.superCluster()->energy();
-}
+}*/
 //define this as a plug-in
 DEFINE_FWK_MODULE(ElectronIsolationAnalyzer);
