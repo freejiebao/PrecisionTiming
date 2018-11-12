@@ -116,10 +116,10 @@ struct eventInfo {
     vector<float> electron_chIso_reldZ_dT_4D[10][10];
     vector<int>   track_elecIndex;
 
-    vector<int> passVetoId;
+    /*vector<int> passVetoId;
     vector<int> passLooseId;
     vector<int> passMediumId;
-    vector<int> passTightId;
+    vector<int> passTightId;*/
     //vector<int> passHEEPId;
 };
 
@@ -151,10 +151,10 @@ private:
     EDGetTokenT<View<reco::GsfElectron>>      barrelElectronsToken_;
     EDGetTokenT<View<reco::GsfElectron>>      endcapElectronsToken_;
     // ID decisions objects
-    EDGetTokenT<edm::ValueMap<bool>> eleVetoIdMapToken_;
+    /*EDGetTokenT<edm::ValueMap<bool>> eleVetoIdMapToken_;
     EDGetTokenT<edm::ValueMap<bool>> eleLooseIdMapToken_;
     EDGetTokenT<edm::ValueMap<bool>> eleMediumIdMapToken_;
-    EDGetTokenT<edm::ValueMap<bool>> eleTightIdMapToken_;
+    EDGetTokenT<edm::ValueMap<bool>> eleTightIdMapToken_;*/
     //--- outputs
     edm::Service<TFileService> fs_;
     TTree*                     eventTree[10];
