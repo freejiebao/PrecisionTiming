@@ -455,7 +455,7 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
                 }  // end loop over cone sizes
             }
             // -- using reco vertex closest in dz to the gen vtx with timing info: vtx4D
-            if (dz < maxDz_ && dxy < 0.02) {
+            if (dz4D < maxDz_ && dxy < 0.02) {
                 for (unsigned int iCone = 0; iCone < isoConeDR_.size(); iCone++) {
                     if (dr > minDr_ && dr < isoConeDR_[iCone]) {
                         for (unsigned int iRes = 0; iRes < timeResolutions_.size(); iRes++) {
@@ -482,6 +482,7 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
                         if (isoConeDR_[iCone] == 0.3 && saveTracks_) {
                             for (unsigned int iRes = 0; iRes < timeResolutions_.size(); iRes++) {
                                 evInfo[iRes].track_t.push_back(time[iCone][iRes]);
+                                evInfo[iRes].track_dz.push_back(trackRef->dz(vtx.position()));
                                 evInfo[iRes].track_dz3D.push_back(trackRef->dz(vtx3D.position()));
                                 evInfo[iRes].track_dz4D.push_back(trackRef->dz(vtx4D.position()));
                                 evInfo[iRes].track_pt.push_back(pfcand.pt());
@@ -519,7 +520,7 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
             }
 
             // -- using reco vertex closest in dz to the sim vertex and use a relative dz cut
-            if (dz4Drel < 3.0 && dxy4D < 0.02) {
+            if (dz4Drel < 3.0 && dxy < 0.02) {
                 for (unsigned int iCone = 0; iCone < isoConeDR_.size(); iCone++) {
                     if (dr > minDr_ && dr < isoConeDR_[iCone]) {
                         for (unsigned int iRes = 0; iRes < timeResolutions_.size(); iRes++) {
@@ -529,7 +530,7 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
                             time[iCone][iRes]  = -999.;
                             if (pfcand.isTimeValid()) {
                                 time[iCone][iRes] = pfcand.time() + gRandom->Gaus(0., extra_resol);
-                                dt                = std::abs(time[iCone][iRes] - vtx4D.t());
+                                dt                = std::abs(time[iCone][iRes] - vtx.t());
                             }
                             else {
                                 dt = 0;
@@ -541,7 +542,6 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
                     }
                 }  // end loop over cone sizes
             }
-
         }  // end loop over tracks
 
         // fill electron info
@@ -784,7 +784,7 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
                 }  // end loop over cone sizes
             }
             // -- using reco vertex closest in dz to the gen vtx with timing info: vtx4D
-            if (dz < maxDz_ && dxy < 0.02) {
+            if (dz4D < maxDz_ && dxy < 0.02) {
                 for (unsigned int iCone = 0; iCone < isoConeDR_.size(); iCone++) {
                     if (dr > minDr_ && dr < isoConeDR_[iCone]) {
                         for (unsigned int iRes = 0; iRes < timeResolutions_.size(); iRes++) {
