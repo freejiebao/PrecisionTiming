@@ -114,7 +114,7 @@ struct eventInfo {
     vector<float> electron_chIso_reldZ[10];
     vector<float> electron_chIso_reldZ_dT[10][10];
     vector<float> electron_chIso_reldZ_dT_4D[10][10];
-    vector<int>   electronIndex;
+    vector<int>   track_elecIndex;
 
     vector<int> passVetoId;
     vector<int> passLooseId;

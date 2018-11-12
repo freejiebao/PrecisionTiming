@@ -267,12 +267,12 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
         float          relIsoWithEA = 0.112 + 0.506 / electron.pt();
         float          ep           = Get_epCut(electron);
         int            mHits        = Get_mHitsCut(electron);
-        bool           conversion float if (< 0.0105 &&)
+        bool           conversion float if (< 0.0105 &&);*/
         auto el            = barrelElectrons.ptrAt(iele);
-        bool           isPassVeto_   = (*veto_id_decisions)[el];
-        bool           isPassLoose_  = (*loose_id_decisions)[el];
-        bool           isPassMedium_ = (*medium_id_decisions)[el];
-        bool           isPassTight_  = (*tight_id_decisions)[el];*/
+        bool isPassVeto_   = (*veto_id_decisions)[el];
+        bool isPassLoose_  = (*loose_id_decisions)[el];
+        bool isPassMedium_ = (*medium_id_decisions)[el];
+        bool isPassTight_  = (*tight_id_decisions)[el];
 
         // -- compute charged isolations
         float chIso[nCones];
