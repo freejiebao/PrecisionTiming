@@ -428,6 +428,7 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
                         for (unsigned int iRes = 0; iRes < timeResolutions_.size(); iRes++) {
                             double time_resol  = timeResolutions_[iRes];
                             double extra_resol = sqrt(time_resol * time_resol - 0.03 * 0.03);
+                            double dt          = 0.;
                             if (pfcand.isTimeValid()) {
                                 time[iCone][iRes] = pfcand.time() + gRandom->Gaus(0., extra_resol);
                                 //elecTime          = elecTime + gRandom->Gaus(0., extra_resol);
@@ -460,6 +461,7 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
                         for (unsigned int iRes = 0; iRes < timeResolutions_.size(); iRes++) {
                             double time_resol  = timeResolutions_[iRes];
                             double extra_resol = sqrt(time_resol * time_resol - 0.03 * 0.03);
+                            double dt          = 0.;
                             if (pfcand.isTimeValid()) {
                                 time[iCone][iRes] = pfcand.time() + gRandom->Gaus(0., extra_resol);
                                 //elecTime          = elecTime + gRandom->Gaus(0., extra_resol);
@@ -606,8 +608,10 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
         // -- compute charged isolations
         float chIso[nCones];
         float chIso_dT[nCones][nResol];
+        float chIso_dT_4D[nCones][nResol];
         float chIso_reldZ[nCones];
         float chIso_reldZ_dT[nCones][nResol];
+        float chIso_reldZ_dT_4D[nCones][nResol];
         float chIso_simVtx[nCones];
         float chIso_dT_simVtx[nCones][nResol];
         float time[nCones][nResol];
@@ -675,11 +679,14 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
             // -- get dz, dxy
             float dz    = std::abs(trackRef->dz(vtx.position()));
             float dz3D  = std::abs(trackRef->dz(vtx3D.position()));
+            float dz4D  = std::abs(trackRef->dz(vtx4D.position()));
             float dxy   = std::abs(trackRef->dxy(vtx.position()));
             float dxy3D = std::abs(trackRef->dxy(vtx3D.position()));
+            float dxy4D = std::abs(trackRef->dxy(vtx4D.position()));
 
             float dz3Drel = std::abs(dz3D / std::sqrt(trackRef->dzError() * trackRef->dzError() + vtx3D.zError() * vtx3D.zError()));
             float dzrel   = std::abs(dz / std::sqrt(trackRef->dzError() * trackRef->dzError() + vtx.zError() * vtx.zError()));
+            float dz4Drel = std::abs(dz / std::sqrt(trackRef->dzError() * trackRef->dzError() + vtx4D.zError() * vtx4D.zError()));
 
             float dzsim  = std::abs(trackRef->vz() - genPV.position().z());
             float dxysim = sqrt(pow(trackRef->vx() - genPV.position().x(), 2) + pow(trackRef->vy() - genPV.position().y(), 2));
@@ -750,6 +757,7 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
                         for (unsigned int iRes = 0; iRes < timeResolutions_.size(); iRes++) {
                             double time_resol  = timeResolutions_[iRes];
                             double extra_resol = sqrt(time_resol * time_resol - 0.03 * 0.03);
+                            double dt          = 0.;
                             if (pfcand.isTimeValid()) {
                                 time[iCone][iRes] = pfcand.time() + gRandom->Gaus(0., extra_resol);
                                 //elecTime          = elecTime + gRandom->Gaus(0., extra_resol);
@@ -782,6 +790,7 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
                         for (unsigned int iRes = 0; iRes < timeResolutions_.size(); iRes++) {
                             double time_resol  = timeResolutions_[iRes];
                             double extra_resol = sqrt(time_resol * time_resol - 0.03 * 0.03);
+                            double dt          = 0.;
                             if (pfcand.isTimeValid()) {
                                 time[iCone][iRes] = pfcand.time() + gRandom->Gaus(0., extra_resol);
                                 //elecTime          = elecTime + gRandom->Gaus(0., extra_resol);
@@ -902,12 +911,22 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
 
     // -- fill info per event
     for (unsigned int iRes = 0; iRes < timeResolutions_.size(); iRes++) {
-        evInfo[iRes].npu      = nPU;
-        evInfo[iRes].vtx_t    = vtx.t();
-        evInfo[iRes].vtx_z    = vtx.z();
-        evInfo[iRes].vtx3D_z  = vtx3D.z();
-        evInfo[iRes].vtxGen_z = genPV.position().z();
-        evInfo[iRes].vtxGen_t = genPV.position().t();
+        evInfo[iRes].npu          = nPU;
+        evInfo[iRes].vtx_t        = vtx.t();
+        evInfo[iRes].vtx_tErr     = vtx.tError();
+        evInfo[iRes].vtx_z        = vtx.z();
+        evInfo[iRes].vtx_zErr     = vtx.zError();
+        evInfo[iRes].vtx4D_t      = vtx4D.t();
+        evInfo[iRes].vtx4D_tErr   = vtx4D.tError();
+        evInfo[iRes].vtx4D_z      = vtx4D.z();
+        evInfo[iRes].vtx4D_zErr   = vtx4D.zError();
+        evInfo[iRes].vtx3D_z      = vtx3D.z();
+        evInfo[iRes].vtx3D_zErr   = vtx3D.zError();
+        evInfo[iRes].vtxGen_z     = genPV.position().z();
+        evInfo[iRes].vtxGen_t     = genPV.position().t();
+        evInfo[iRes].vtx_isFake   = vtx.isFake();
+        evInfo[iRes].vtx3D_isFake = vtx3D.isFake();
+        evInfo[iRes].vtx4D_isFake = vtx4D.isFake();
     }
 
     // --- fill the tree
@@ -924,14 +943,19 @@ void ElectronIsolationAnalyzer::beginJob() {
         eventTree[iRes]->Branch("npu", &evInfo[iRes].npu);
         eventTree[iRes]->Branch("vtxGen_z", &evInfo[iRes].vtxGen_z);
         eventTree[iRes]->Branch("vtxGen_t", &evInfo[iRes].vtxGen_t);
-        eventTree[iRes]->Branch("vtx3D_z", &evInfo[iRes].vtx3D_z);
-        eventTree[iRes]->Branch("vtx3D_zErr", &evInfo[iRes].vtx3D_zErr);
         eventTree[iRes]->Branch("vtx_z", &evInfo[iRes].vtx_z);
         eventTree[iRes]->Branch("vtx_zErr", &evInfo[iRes].vtx_zErr);
         eventTree[iRes]->Branch("vtx_t", &evInfo[iRes].vtx_t);
         eventTree[iRes]->Branch("vtx_tErr", &evInfo[iRes].vtx_tErr);
+        eventTree[iRes]->Branch("vtx3D_z", &evInfo[iRes].vtx3D_z);
+        eventTree[iRes]->Branch("vtx3D_zErr", &evInfo[iRes].vtx3D_zErr);
+        eventTree[iRes]->Branch("vtx4D_z", &evInfo[iRes].vtx4D_z);
+        eventTree[iRes]->Branch("vtx4D_zErr", &evInfo[iRes].vtx4D_zErr);
+        eventTree[iRes]->Branch("vtx4D_t", &evInfo[iRes].vtx4D_t);
+        eventTree[iRes]->Branch("vtx4D_tErr", &evInfo[iRes].vtx4D_tErr);
         eventTree[iRes]->Branch("vtx_isFake", &evInfo[iRes].vtx_isFake);
         eventTree[iRes]->Branch("vtx3D_isFake", &evInfo[iRes].vtx3D_isFake);
+        eventTree[iRes]->Branch("vtx4D_isFake", &evInfo[iRes].vtx4D_isFake);
         eventTree[iRes]->Branch("drep", &evInfo[iRes].drep);  // add for veto dr
         eventTree[iRes]->Branch("electron_pt", &evInfo[iRes].electron_pt);
         eventTree[iRes]->Branch("electron_eta", &evInfo[iRes].electron_eta);
@@ -996,15 +1020,19 @@ void ElectronIsolationAnalyzer::initEventStructure() {
         evInfo[iRes].npu          = -1;
         evInfo[iRes].vtxGen_t     = -999;
         evInfo[iRes].vtxGen_z     = -999;
-        evInfo[iRes].vtx3D_z      = -999;
-        evInfo[iRes].vtx3D_zErr   = -999;
         evInfo[iRes].vtx_z        = -999;
         evInfo[iRes].vtx_zErr     = -999;
         evInfo[iRes].vtx_t        = -999;
         evInfo[iRes].vtx_tErr     = -999;
-        evInfo[iRes].vtx3D_isFake = -999;
+        evInfo[iRes].vtx3D_z      = -999;
+        evInfo[iRes].vtx3D_zErr   = -999;
+        evInfo[iRes].vtx4D_z      = -999;
+        evInfo[iRes].vtx4D_zErr   = -999;
+        evInfo[iRes].vtx4D_t      = -999;
+        evInfo[iRes].vtx4D_tErr   = -999;
         evInfo[iRes].vtx_isFake   = -999;
-
+        evInfo[iRes].vtx3D_isFake = -999;
+        evInfo[iRes].vtx4D_isFake = -999;
         evInfo[iRes].drep.clear();
         evInfo[iRes].electron_pt.clear();
         evInfo[iRes].electron_eta.clear();

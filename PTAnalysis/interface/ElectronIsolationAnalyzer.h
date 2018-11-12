@@ -75,9 +75,19 @@ struct eventInfo {
 
     float vtxGen_z;
     float vtxGen_t;
-    float vtx3D_z;
     float vtx_z;
+    float vtx_zErr;
     float vtx_t;
+    float vtx_tErr;
+    float vtx3D_z;
+    float vtx3D_zErr;
+    float vtx4D_z;
+    float vtx4D_zErr;
+    float vtx4D_t;
+    float vtx4D_tErr;
+    float vtx_isFake;
+    float vtx3D_isFake;
+    float vtx4D_isFake;
 
     // -- store the dr between the electron and pfCand, the use it to find the dr of veto cone.
     vector<float> drep;
@@ -100,11 +110,11 @@ struct eventInfo {
     vector<float> electron_chIso_dT[10][10];
     vector<float> electron_chIso_simVtx[10];
     vector<float> electron_chIso_dT_simVtx[10][10];
-    vector<float> electron_chIso_simVtx[10];
     vector<float> electron_chIso_dT_4D[10][10];
     vector<float> electron_chIso_reldZ[10];
     vector<float> electron_chIso_reldZ_dT[10][10];
     vector<float> electron_chIso_reldZ_dT_4D[10][10];
+    vector<int>   electronIndex;
 
     vector<int> passVetoId;
     vector<int> passLooseId;
@@ -141,10 +151,10 @@ private:
     EDGetTokenT<View<reco::GsfElectron>>      barrelElectronsToken_;
     EDGetTokenT<View<reco::GsfElectron>>      endcapElectronsToken_;
     // ID decisions objects
-    /*EDGetTokenT<edm::ValueMap<bool>> eleVetoIdMapToken_;
+    EDGetTokenT<edm::ValueMap<bool>> eleVetoIdMapToken_;
     EDGetTokenT<edm::ValueMap<bool>> eleLooseIdMapToken_;
     EDGetTokenT<edm::ValueMap<bool>> eleMediumIdMapToken_;
-    EDGetTokenT<edm::ValueMap<bool>> eleTightIdMapToken_;*/
+    EDGetTokenT<edm::ValueMap<bool>> eleTightIdMapToken_;
     //--- outputs
     edm::Service<TFileService> fs_;
     TTree*                     eventTree[10];
