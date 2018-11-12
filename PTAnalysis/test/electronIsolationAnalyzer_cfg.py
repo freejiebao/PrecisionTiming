@@ -35,8 +35,7 @@ process.source = cms.Source ("PoolSource", fileNames = inputFiles )
 #
 # Set up electron ID (VID framework)
 #
-
-#from PhysicsTools.SelectorUtils.tools.vid_id_tools import *
+from PhysicsTools.SelectorUtils.tools.vid_id_tools import *
 # turn on VID producer, indicate data format  to be
 # DataFormat.AOD or DataFormat.MiniAOD, as appropriate
 if useAOD == True :
