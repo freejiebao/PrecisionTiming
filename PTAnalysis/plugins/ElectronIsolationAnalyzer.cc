@@ -57,7 +57,8 @@ ElectronIsolationAnalyzer::ElectronIsolationAnalyzer(const edm::ParameterSet& iC
       genVertexToken_(consumes<vector<SimVertex>>(iConfig.getUntrackedParameter<InputTag>("genVtxTag"))),
       genJetsToken_(consumes<View<reco::GenJet>>(iConfig.getUntrackedParameter<InputTag>("genJetsTag"))),
       barrelElectronsToken_(consumes<View<reco::GsfElectron>>(iConfig.getUntrackedParameter<edm::InputTag>("barrelElectronsTag"))),
-      //endcapElectronsToken_(consumes<View<reco::GsfElectron>>(iConfig.getUntrackedParameter<edm::InputTag>("endcapElectronsTag"))), eleVetoIdMapToken_(consumes<edm::ValueMap<bool>>(iConfig.getParameter<edm::InputTag>("eleVetoIdMap"))),
+      //endcapElectronsToken_(consumes<View<reco::GsfElectron>>(iConfig.getUntrackedParameter<edm::InputTag>("endcapElectronsTag"))),
+      eleVetoIdMapToken_(consumes<edm::ValueMap<bool>>(iConfig.getParameter<edm::InputTag>("eleVetoIdMap"))),
       eleLooseIdMapToken_(consumes<edm::ValueMap<bool>>(iConfig.getParameter<edm::InputTag>("eleLooseIdMap"))),
       eleMediumIdMapToken_(consumes<edm::ValueMap<bool>>(iConfig.getParameter<edm::InputTag>("eleMediumIdMap"))),
       eleTightIdMapToken_(consumes<edm::ValueMap<bool>>(iConfig.getParameter<edm::InputTag>("eleTightIdMap"))) {
