@@ -11,9 +11,9 @@ inputFilesAOD = cms.untracked.vstring(
     # AOD test files from /DYJetsToLL_M-50_13TeV-madgraph-pythia8/Phys14DR-PU20bx25_PHYS14_25_V1-v1/AODSIM
     '/store/mc/PhaseIISpr18AODMiniAOD/DYToLL-M-50_2J_14TeV-madgraphMLM-pythia8/AODSIM/noPU_93X_upgrade2023_realistic_v5-v1/210000/F49D8A6B-B348-E811-9DC2-A4BF011254E0.root',
     )
-inputFilesGEN-SIM-RECO = cms.untracked.vstring(
-    # AOD test files from /DYJetsToLL_M-50_13TeV-madgraph-pythia8/Phys14DR-PU20bx25_PHYS14_25_V1-v1/AODSIM
-    '/store/mc/PhaseIISpr18AODMiniAOD/DYToLL-M-50_2J_14TeV-madgraphMLM-pythia8/AODSIM/noPU_93X_upgrade2023_realistic_v5-v1/210000/F49D8A6B-B348-E811-9DC2-A4BF011254E0.root',
+inputFilesGenSimReco = cms.untracked.vstring(
+    # GEN-SIM-RECO test files from /DYToLL-M-50_0J_14TeV-madgraphMLM-pythia8/PhaseIITDRFall17DR-PU200_93X_upgrade2023_realistic_v2-v1/GEN-SIM-RECO
+    '/store/mc/PhaseIITDRFall17DR/DYToLL-M-50_0J_14TeV-madgraphMLM-pythia8/GEN-SIM-RECO/PU200_93X_upgrade2023_realistic_v2-v1/00000/0051AD4B-31AF-E711-8324-7845C4FC3683.root',
     )
 inputFilesMiniAOD = cms.untracked.vstring(
     # MiniAOD test files from /DYJetsToLL_M-50_13TeV-madgraph-pythia8/Phys14DR-PU20bx25_PHYS14_25_V1-v1/MINIAODSIM
@@ -30,7 +30,7 @@ if useAOD == True :
     outputFile = "electronIsolation.root"
     print("AOD input files are used")
 else :
-    inputFiles = inputFilesGEN-SIM-RECO #inputFiles = inputFilesMiniAOD
+    inputFiles = inputFilesGenSimReco #inputFiles = inputFilesMiniAOD
     outputFile = "electronIsolation_GEN-SIM-RECO.root" #outputFile = "electronIsolationminiAOD.root"
     print("GEN-SIM-RECO input files are used")
 process.source = cms.Source ("PoolSource", fileNames = inputFiles )
