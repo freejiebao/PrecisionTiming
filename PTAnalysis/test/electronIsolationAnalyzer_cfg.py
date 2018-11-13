@@ -40,14 +40,14 @@ process.source = cms.Source ("PoolSource", fileNames = inputFiles )
 #
 from PhysicsTools.SelectorUtils.tools.vid_id_tools import *
 # turn on VID producer, indicate data format  to be
-# DataFormat.AOD or DataFormat.MiniAOD, as appropriate
-#if useAOD == True :
-#    dataFormat = DataFormat.AOD
-#else :
-#    dataFormat = DataFormat.MiniAOD
+ DataFormat.AOD or DataFormat.MiniAOD, as appropriate
+if useAOD == True :
+    dataFormat = DataFormat.AOD
+else :
+    dataFormat = DataFormat.MiniAOD
 
-#switchOnVIDElectronIdProducer(process, dataFormat)
-switchOnVIDElectronIdProducer(process)
+switchOnVIDElectronIdProducer(process, dataFormat)
+#switchOnVIDElectronIdProducer(process)
 # define which IDs we want to produce
 my_id_modules = ['RecoEgamma.ElectronIdentification.Identification.cutBasedElectronID_Fall17_94X_V2_cff']
 #my_id_modules = ['RecoEgamma.ElectronIdentification.Identification.heepElectronID_HEEPV70_cff']
