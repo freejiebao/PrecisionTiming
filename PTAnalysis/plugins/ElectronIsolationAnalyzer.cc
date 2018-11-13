@@ -57,7 +57,7 @@ ElectronIsolationAnalyzer::ElectronIsolationAnalyzer(const edm::ParameterSet& iC
       genVertexToken_(consumes<vector<SimVertex>>(iConfig.getUntrackedParameter<InputTag>("genVtxTag"))),
       genJetsToken_(consumes<View<reco::GenJet>>(iConfig.getUntrackedParameter<InputTag>("genJetsTag"))),
       barrelElectronsToken_(consumes<View<reco::GsfElectron>>(iConfig.getUntrackedParameter<edm::InputTag>("barrelElectronsTag"))),
-      endcapElectronsToken_(consumes<View<reco::GsfElectron>>(iConfig.getUntrackedParameter<edm::InputTag>("endcapElectronsTag"))), eleVetoIdMapToken_(consumes<edm::ValueMap<bool>>(iConfig.getParameter<edm::InputTag>("eleVetoIdMap"))),
+      //endcapElectronsToken_(consumes<View<reco::GsfElectron>>(iConfig.getUntrackedParameter<edm::InputTag>("endcapElectronsTag"))), eleVetoIdMapToken_(consumes<edm::ValueMap<bool>>(iConfig.getParameter<edm::InputTag>("eleVetoIdMap"))),
       eleLooseIdMapToken_(consumes<edm::ValueMap<bool>>(iConfig.getParameter<edm::InputTag>("eleLooseIdMap"))),
       eleMediumIdMapToken_(consumes<edm::ValueMap<bool>>(iConfig.getParameter<edm::InputTag>("eleMediumIdMap"))),
       eleTightIdMapToken_(consumes<edm::ValueMap<bool>>(iConfig.getParameter<edm::InputTag>("eleTightIdMap"))) {
@@ -111,9 +111,9 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
     const edm::View<reco::GsfElectron>& barrelElectrons = *BarrelElectronCollectionH;
 
     // -- get the endcap electrons
-    Handle<View<reco::GsfElectron>> EndcapElectronCollectionH;
+    /*Handle<View<reco::GsfElectron>> EndcapElectronCollectionH;
     iEvent.getByToken(endcapElectronsToken_, EndcapElectronCollectionH);
-    const edm::View<reco::GsfElectron>& endcapElectrons = *EndcapElectronCollectionH;
+    const edm::View<reco::GsfElectron>& endcapElectrons = *EndcapElectronCollectionH;*/
 
     // -- get the PFCandidate collection
     Handle<View<reco::PFCandidate>> PFCandidateCollectionH;
@@ -241,8 +241,8 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
             continue;
         if (electron.gsfTrack().isNull())
             continue;
-        if (fabs(electron.eta()) > 1.5)
-            continue;
+        //if (fabs(electron.eta()) > 1.5)
+        //    continue;
         electronIndex++;
         // -- check if prompt or fake electron
         bool isPromptEle   = isPromptElectron(electron, genParticles);
@@ -578,7 +578,7 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
         }
     }  // end loop over barrel electrons
 
-    electronIndex = 0;
+    /*  electronIndex = 0;
     // -- start loop over endcap electrons
     for (unsigned int iele = 0; iele < endcapElectrons.size(); iele++) {
 
@@ -598,11 +598,11 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
         bool isMatchedJet2 = isMatchedToGenJet2(electron, genJets);
 
         // -- Look up and save the ID decisions
-        const auto el            = endcapElectrons.ptrAt(iele);
-        bool       isPassVeto_   = (*veto_id_decisions)[el];
-        bool       isPassLoose_  = (*loose_id_decisions)[el];
-        bool       isPassMedium_ = (*medium_id_decisions)[el];
-        bool       isPassTight_  = (*tight_id_decisions)[el];
+        auto el            = endcapElectrons.ptrAt(iele);
+        bool isPassVeto_   = (*veto_id_decisions)[el];
+        bool isPassLoose_  = (*loose_id_decisions)[el];
+        bool isPassMedium_ = (*medium_id_decisions)[el];
+        bool isPassTight_  = (*tight_id_decisions)[el];
 
         // -- compute charged isolations
         float chIso[nCones];
@@ -907,7 +907,7 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
             }
         }
     }  // end loop over endcap electrons
-
+*/
     // -- fill info per event
     for (unsigned int iRes = 0; iRes < timeResolutions_.size(); iRes++) {
         evInfo[iRes].npu          = nPU;

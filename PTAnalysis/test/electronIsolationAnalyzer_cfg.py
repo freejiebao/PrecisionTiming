@@ -60,7 +60,7 @@ process.analysis = cms.EDAnalyzer(
     VertexTag4D  = cms.InputTag("offlinePrimaryVertices4D"),
     PileUpTag    = cms.InputTag("addPileupInfo"),
     barrelElectronsTag   = cms.untracked.InputTag("gedGsfElectrons"),
-    endcapElectronsTag   = cms.untracked.InputTag("ecalDrivenGsfElectronsFromMultiCl"),
+    #endcapElectronsTag   = cms.untracked.InputTag("ecalDrivenGsfElectronsFromMultiCl"),
     TracksTag    = cms.InputTag("generalTracks"),
     TrackTimeValueMapTag = cms.InputTag("trackTimeValueMapProducer","generalTracksConfigurableFlatResolutionModel"),
     PFCandidateTag = cms.InputTag("particleFlow", "", "RECO"),
@@ -87,4 +87,4 @@ process.analysis = cms.EDAnalyzer(
 process.TFileService = cms.Service("TFileService",
                                    fileName = cms.string(outputFile))
 # Make sure to add the ID sequence upstream from the user analysis module
-process.p = cms.Path(process.analysis)
+process.p = cms.Path(process.egmGsfElectronIDSequence * process.analysis)

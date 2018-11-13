@@ -149,7 +149,7 @@ private:
     EDGetTokenT<vector<SimVertex>>            genVertexToken_;
     EDGetTokenT<View<reco::GenJet>>           genJetsToken_;
     EDGetTokenT<View<reco::GsfElectron>>      barrelElectronsToken_;
-    EDGetTokenT<View<reco::GsfElectron>>      endcapElectronsToken_;
+    //EDGetTokenT<View<reco::GsfElectron>>      endcapElectronsToken_;
     // ID decisions objects
     EDGetTokenT<edm::ValueMap<bool>> eleVetoIdMapToken_;
     EDGetTokenT<edm::ValueMap<bool>> eleLooseIdMapToken_;
