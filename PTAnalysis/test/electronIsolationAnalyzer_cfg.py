@@ -11,7 +11,10 @@ inputFilesAOD = cms.untracked.vstring(
     # AOD test files from /DYJetsToLL_M-50_13TeV-madgraph-pythia8/Phys14DR-PU20bx25_PHYS14_25_V1-v1/AODSIM
     '/store/mc/PhaseIISpr18AODMiniAOD/DYToLL-M-50_2J_14TeV-madgraphMLM-pythia8/AODSIM/noPU_93X_upgrade2023_realistic_v5-v1/210000/F49D8A6B-B348-E811-9DC2-A4BF011254E0.root',
     )
-
+inputFilesGEN-SIM-RECO = cms.untracked.vstring(
+    # AOD test files from /DYJetsToLL_M-50_13TeV-madgraph-pythia8/Phys14DR-PU20bx25_PHYS14_25_V1-v1/AODSIM
+    '/store/mc/PhaseIISpr18AODMiniAOD/DYToLL-M-50_2J_14TeV-madgraphMLM-pythia8/AODSIM/noPU_93X_upgrade2023_realistic_v5-v1/210000/F49D8A6B-B348-E811-9DC2-A4BF011254E0.root',
+    )
 inputFilesMiniAOD = cms.untracked.vstring(
     # MiniAOD test files from /DYJetsToLL_M-50_13TeV-madgraph-pythia8/Phys14DR-PU20bx25_PHYS14_25_V1-v1/MINIAODSIM
     '/store/mc/PhaseIISpr18AODMiniAOD/DYToLL-M-50_2J_14TeV-madgraphMLM-pythia8/MINIAODSIM/noPU_93X_upgrade2023_realistic_v5-v1/10000/A2B8867E-4944-E811-86F0-001E67792650.root',
@@ -27,9 +30,9 @@ if useAOD == True :
     outputFile = "electronIsolation.root"
     print("AOD input files are used")
 else :
-    inputFiles = inputFilesMiniAOD
-    outputFile = "electronIsolation_mini.root"
-    print("MiniAOD input files are used")
+    inputFiles = inputFilesGEN-SIM-RECO #inputFiles = inputFilesMiniAOD
+    outputFile = "electronIsolation_GEN-SIM-RECO.root" #outputFile = "electronIsolationminiAOD.root"
+    print("GEN-SIM-RECO input files are used")
 process.source = cms.Source ("PoolSource", fileNames = inputFiles )
 
 #
@@ -38,15 +41,15 @@ process.source = cms.Source ("PoolSource", fileNames = inputFiles )
 from PhysicsTools.SelectorUtils.tools.vid_id_tools import *
 # turn on VID producer, indicate data format  to be
 # DataFormat.AOD or DataFormat.MiniAOD, as appropriate
-if useAOD == True :
-    dataFormat = DataFormat.AOD
-else :
-    dataFormat = DataFormat.MiniAOD
+#if useAOD == True :
+#    dataFormat = DataFormat.AOD
+#else :
+#    dataFormat = DataFormat.MiniAOD
 
-switchOnVIDElectronIdProducer(process, dataFormat)
-
+#switchOnVIDElectronIdProducer(process, dataFormat)
+switchOnVIDElectronIdProducer(process)
 # define which IDs we want to produce
-my_id_modules = ['RecoEgamma.ElectronIdentification.Identification.cutBasedElectronID_Fall17_94X_V2_cff']
+my_id_modules = ['RecoEgamma.ElectronIdentification.Identification.cutBasedElectronID_Fall17_94X_V1_cff']
 #my_id_modules = ['RecoEgamma.ElectronIdentification.Identification.heepElectronID_HEEPV70_cff']
 # add them to the VID producer
 for idmod in my_id_modules:
@@ -76,10 +79,10 @@ process.analysis = cms.EDAnalyzer(
     #
     # ID decisions (common to all formats)
     #
-    eleVetoIdMap = cms.InputTag("egmGsfElectronIDs:cutBasedElectronID-Fall17-94X-V2-veto"),
-    eleLooseIdMap = cms.InputTag("egmGsfElectronIDs:cutBasedElectronID-Fall17-94X-V2-loose"),
-    eleMediumIdMap = cms.InputTag("egmGsfElectronIDs:cutBasedElectronID-Fall17-94X-V2-medium"),
-    eleTightIdMap = cms.InputTag("egmGsfElectronIDs:cutBasedElectronID-Fall17-94X-V2-tight"),
+    eleVetoIdMap = cms.InputTag("egmGsfElectronIDs:cutBasedElectronID-Fall17-94X-V1-veto"),
+    eleLooseIdMap = cms.InputTag("egmGsfElectronIDs:cutBasedElectronID-Fall17-94X-V1-loose"),
+    eleMediumIdMap = cms.InputTag("egmGsfElectronIDs:cutBasedElectronID-Fall17-94X-V1-medium"),
+    eleTightIdMap = cms.InputTag("egmGsfElectronIDs:cutBasedElectronID-Fall17-94X-V1-tight"),
     #eleHEEPIdMap = cms.InputTag("egmGsfElectronIDs:heepElectronID-HEEPV70")
 )
 

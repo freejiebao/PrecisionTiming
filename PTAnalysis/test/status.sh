@@ -17,3 +17,9 @@ crab status -d DY_PU200_3J
 crab status -d QCD_noPU
 crab status -d QCD_PU200_ext
 crab status -d QCD_PU200
+crab status -d DY_PU200_GEN-SIM-RECO_ext
+crab status -d DY_PU200_GEN-SIM-RECO
+crab status -d DY_noPU_GEN-SIM-RECO
+crab status -d QCD_PU200_GEN-SIM-RECO_ext
+crab status -d QCD_PU200_GEN-SIM-RECO
+crab status -d QCD_noPU_GEN-SIM-RECO
