@@ -58,21 +58,21 @@ ElectronIsolationAnalyzer::ElectronIsolationAnalyzer(const edm::ParameterSet& iC
       genJetsToken_(consumes<View<reco::GenJet>>(iConfig.getUntrackedParameter<InputTag>("genJetsTag"))),
       barrelElectronsToken_(consumes<View<reco::GsfElectron>>(iConfig.getUntrackedParameter<edm::InputTag>("barrelElectronsTag"))),
       //endcapElectronsToken_(consumes<View<reco::GsfElectron>>(iConfig.getUntrackedParameter<edm::InputTag>("endcapElectronsTag"))),
-      eleVetoIdMapToken_(consumes<edm::ValueMap<bool>>(iConfig.getParameter<edm::InputTag>("eleVetoIdMap"))),
-      eleLooseIdMapToken_(consumes<edm::ValueMap<bool>>(iConfig.getParameter<edm::InputTag>("eleLooseIdMap"))),
-      eleMediumIdMapToken_(consumes<edm::ValueMap<bool>>(iConfig.getParameter<edm::InputTag>("eleMediumIdMap"))),
-      eleTightIdMapToken_(consumes<edm::ValueMap<bool>>(iConfig.getParameter<edm::InputTag>("eleTightIdMap"))) {
-    timeResolutions_ = iConfig.getUntrackedParameter<vector<double>>("timeResolutions");
-    isoConeDR_       = iConfig.getUntrackedParameter<vector<double>>("isoConeDR");
-    saveTracks_      = iConfig.getUntrackedParameter<bool>("saveTracks");
-    maxDz_           = iConfig.getUntrackedParameter<double>("maxDz");
-    minDr_           = iConfig.getUntrackedParameter<double>("minDr");
-    isAOD_           = iConfig.getUntrackedParameter<bool>("isAOD");
-    //Now do what ever initialization is needed
-    for (unsigned int iRes = 0; iRes < timeResolutions_.size(); iRes++) {
-        eventTree[iRes] = fs_->make<TTree>(Form("tree_%dps", int(timeResolutions_[iRes] * 1000)), Form("tree_%dps", int(timeResolutions_[iRes] * 1000)));
-        cout << iRes << "  " << timeResolutions_[iRes] << "  " << eventTree[iRes]->GetName() << endl;
-    }
+      //eleVetoIdMapToken_(consumes<edm::ValueMap<bool>>(iConfig.getParameter<edm::InputTag>("eleVetoIdMap"))),
+      //eleLooseIdMapToken_(consumes<edm::ValueMap<bool>>(iConfig.getParameter<edm::InputTag>("eleLooseIdMap"))),
+      //eleMediumIdMapToken_(consumes<edm::ValueMap<bool>>(iConfig.getParameter<edm::InputTag>("eleMediumIdMap"))),
+      //eleTightIdMapToken_(consumes<edm::ValueMap<bool>>(iConfig.getParameter<edm::InputTag>("eleTightIdMap"))) {
+      timeResolutions_ = iConfig.getUntrackedParameter<vector<double>>("timeResolutions");
+isoConeDR_             = iConfig.getUntrackedParameter<vector<double>>("isoConeDR");
+saveTracks_            = iConfig.getUntrackedParameter<bool>("saveTracks");
+maxDz_                 = iConfig.getUntrackedParameter<double>("maxDz");
+minDr_                 = iConfig.getUntrackedParameter<double>("minDr");
+isAOD_                 = iConfig.getUntrackedParameter<bool>("isAOD");
+//Now do what ever initialization is needed
+for (unsigned int iRes = 0; iRes < timeResolutions_.size(); iRes++) {
+    eventTree[iRes] = fs_->make<TTree>(Form("tree_%dps", int(timeResolutions_[iRes] * 1000)), Form("tree_%dps", int(timeResolutions_[iRes] * 1000)));
+    cout << iRes << "  " << timeResolutions_[iRes] << "  " << eventTree[iRes]->GetName() << endl;
+}
 }
 
 ElectronIsolationAnalyzer::~ElectronIsolationAnalyzer() {
@@ -129,14 +129,14 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
     // Get the electron ID data from the event stream.
     // Note: this implies that the VID ID modules have been run upstream.
     // If you need more info, check with the EGM group.
-    Handle<edm::ValueMap<bool>> veto_id_decisions;
+    /*Handle<edm::ValueMap<bool>> veto_id_decisions;
     Handle<edm::ValueMap<bool>> loose_id_decisions;
     Handle<edm::ValueMap<bool>> medium_id_decisions;
     Handle<edm::ValueMap<bool>> tight_id_decisions;
     iEvent.getByToken(eleVetoIdMapToken_, veto_id_decisions);
     iEvent.getByToken(eleLooseIdMapToken_, loose_id_decisions);
     iEvent.getByToken(eleMediumIdMapToken_, medium_id_decisions);
-    iEvent.getByToken(eleTightIdMapToken_, tight_id_decisions);
+    iEvent.getByToken(eleTightIdMapToken_, tight_id_decisions);*/
 
     SimVertex genPV;
     if (isAOD_) {
@@ -268,11 +268,11 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
         float          ep           = Get_epCut(electron);
         int            mHits        = Get_mHitsCut(electron);
         bool           conversion float if (< 0.0105 &&);*/
-        auto el            = barrelElectrons.ptrAt(iele);
+        /*auto el            = barrelElectrons.ptrAt(iele);
         bool isPassVeto_   = (*veto_id_decisions)[el];
         bool isPassLoose_  = (*loose_id_decisions)[el];
         bool isPassMedium_ = (*medium_id_decisions)[el];
-        bool isPassTight_  = (*tight_id_decisions)[el];
+        bool isPassTight_  = (*tight_id_decisions)[el];*/
 
         // -- compute charged isolations
         float chIso[nCones];
@@ -971,10 +971,10 @@ void ElectronIsolationAnalyzer::beginJob() {
         eventTree[iRes]->Branch("electron_sigmaIetaIeta", &evInfo[iRes].electron_sigmaIetaIeta);
         eventTree[iRes]->Branch("electron_t", &evInfo[iRes].electron_t);
         // branch IDs
-        eventTree[iRes]->Branch("passVetoId", &evInfo[iRes].passVetoId);
+        /*eventTree[iRes]->Branch("passVetoId", &evInfo[iRes].passVetoId);
         eventTree[iRes]->Branch("passLooseId", &evInfo[iRes].passLooseId);
         eventTree[iRes]->Branch("passMediumId", &evInfo[iRes].passMediumId);
-        eventTree[iRes]->Branch("passTightId", &evInfo[iRes].passTightId);
+        eventTree[iRes]->Branch("passTightId", &evInfo[iRes].passTightId);*/
 
         for (unsigned int iCone = 0; iCone < isoConeDR_.size(); iCone++) {
             eventTree[iRes]->Branch(Form("electron_chIso%.2d_simVtx", int(isoConeDR_[iCone] * 10)), &evInfo[iRes].electron_chIso_simVtx[iCone]);
@@ -1049,10 +1049,10 @@ void ElectronIsolationAnalyzer::initEventStructure() {
         evInfo[iRes].electron_sigmaIetaIeta.clear();
 
         // clear IDs
-        evInfo[iRes].passVetoId.clear();
+        /*evInfo[iRes].passVetoId.clear();
         evInfo[iRes].passLooseId.clear();
         evInfo[iRes].passMediumId.clear();
-        evInfo[iRes].passTightId.clear();
+        evInfo[iRes].passTightId.clear();*/
 
         for (unsigned int iCone = 0; iCone < isoConeDR_.size(); iCone++) {
             evInfo[iRes].electron_chIso_simVtx[iCone].clear();

@@ -23,7 +23,7 @@ inputFilesMiniAOD = cms.untracked.vstring(
 # Set up input/output depending on the format
 # You can list here either AOD or miniAOD files, but not both types mixed
 #
-useAOD = True
+useAOD = False
 
 if useAOD == True :
     inputFiles = inputFilesAOD
@@ -38,7 +38,7 @@ process.source = cms.Source ("PoolSource", fileNames = inputFiles )
 #
 # Set up electron ID (VID framework)
 #
-from PhysicsTools.SelectorUtils.tools.vid_id_tools import *
+'''from PhysicsTools.SelectorUtils.tools.vid_id_tools import *
 # turn on VID producer, indicate data format  to be
  DataFormat.AOD or DataFormat.MiniAOD, as appropriate
 if useAOD == True :
@@ -53,7 +53,7 @@ my_id_modules = ['RecoEgamma.ElectronIdentification.Identification.cutBasedElect
 #my_id_modules = ['RecoEgamma.ElectronIdentification.Identification.heepElectronID_HEEPV70_cff']
 # add them to the VID producer
 for idmod in my_id_modules:
-   setupAllVIDIdsInModule(process,idmod,setupVIDElectronSelection)
+   setupAllVIDIdsInModule(process,idmod,setupVIDElectronSelection)'''
 
 process.analysis = cms.EDAnalyzer(
     'ElectronIsolationAnalyzer',
@@ -79,10 +79,10 @@ process.analysis = cms.EDAnalyzer(
     #
     # ID decisions (common to all formats)
     #
-    eleVetoIdMap = cms.InputTag("egmGsfElectronIDs:cutBasedElectronID-Fall17-94X-V2-veto"),
+    '''eleVetoIdMap = cms.InputTag("egmGsfElectronIDs:cutBasedElectronID-Fall17-94X-V2-veto"),
     eleLooseIdMap = cms.InputTag("egmGsfElectronIDs:cutBasedElectronID-Fall17-94X-V2-loose"),
     eleMediumIdMap = cms.InputTag("egmGsfElectronIDs:cutBasedElectronID-Fall17-94X-V2-medium"),
-    eleTightIdMap = cms.InputTag("egmGsfElectronIDs:cutBasedElectronID-Fall17-94X-V2-tight"),
+    eleTightIdMap = cms.InputTag("egmGsfElectronIDs:cutBasedElectronID-Fall17-94X-V2-tight"),'''
     #eleHEEPIdMap = cms.InputTag("egmGsfElectronIDs:heepElectronID-HEEPV70")
 )
 
@@ -90,4 +90,5 @@ process.analysis = cms.EDAnalyzer(
 process.TFileService = cms.Service("TFileService",
                                    fileName = cms.string(outputFile))
 # Make sure to add the ID sequence upstream from the user analysis module
-process.p = cms.Path(process.egmGsfElectronIDSequence * process.analysis)
+process.p = cms.Path(process.analysis)
+#process.p = cms.Path(process.egmGsfElectronIDSequence * process.analysis)
