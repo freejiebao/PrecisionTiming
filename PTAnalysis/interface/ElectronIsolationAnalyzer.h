@@ -116,10 +116,10 @@ struct eventInfo {
     vector<float> electron_chIso_reldZ_dT_4D[10][10];
     vector<int>   track_elecIndex;
 
-    /*vector<int> passVetoId;
+    vector<int> passVetoId;
     vector<int> passLooseId;
     vector<int> passMediumId;
-    vector<int> passTightId;*/
+    vector<int> passTightId;
     //vector<int> passHEEPId;
 };
 
