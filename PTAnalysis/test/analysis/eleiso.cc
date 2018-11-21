@@ -490,12 +490,12 @@ int main(int argc, char** argv) {
                 if (electron_chIso02[iele] / pt < 5)
                     h_electron_relChIso02->Fill(electron_chIso02[iele] / pt, wgt);
                 else
-                    h_electron_relChIso02->(4.999, wgt);
+                    h_electron_relChIso02->Fill(4.999, wgt);
 
                 if (electron_chIso03[iele] / pt < 5)
                     h_electron_relChIso03->Fill(electron_chIso03[iele] / pt, wgt);
                 else
-                    h_electron_relChIso03->(4.999, wgt);
+                    h_electron_relChIso03->Fill(4.999, wgt);
 
                 if (electron_chIso04[iele] / pt < 5)
                     h_electron_relChIso04->Fill(electron_chIso04[iele] / pt, wgt);
@@ -505,27 +505,27 @@ int main(int argc, char** argv) {
                 if (electron_chIso05[iele] / pt < 5)
                     h_electron_relChIso05->Fill(electron_chIso05[iele] / pt, wgt);
                 else
-                    h_electron_relChIso05->(4.999, wgt);
+                    h_electron_relChIso05->Fill(4.999, wgt);
 
                 if (electron_chIso02_simVtx[iele] / pt < 5)
                     h_electron_relChIso02_simVtx->Fill(electron_chIso02_simVtx[iele] / pt, wgt);
                 else
-                    h_electron_relChIso02_simVtx->(4.999, wgt);
+                    h_electron_relChIso02_simVtx->Fill(4.999, wgt);
 
                 if (electron_chIso03_simVtx[iele] / pt < 5)
                     h_electron_relChIso03_simVtx->Fill(electron_chIso03_simVtx[iele] / pt, wgt);
                 else
-                    h_electron_relChIso03_simVtx->(4.999, wgt);
+                    h_electron_relChIso03_simVtx->Fill(4.999, wgt);
 
                 if (electron_chIso04_simVtx[iele] / pt < 5)
                     h_electron_relChIso04_simVtx->Fill(electron_chIso04_simVtx[iele] / pt, wgt);
                 else
-                    h_electron_relChIso04_simVtx->(4.999, wgt);
+                    h_electron_relChIso04_simVtx->Fill(4.999, wgt);
 
                 if (electron_chIso05_simVtx[iele] / pt < 5)
                     h_electron_relChIso05_simVtx->Fill(electron_chIso05_simVtx[iele] / pt, wgt);
                 else
-                    h_electron_relChIso05_simVtx->(4.999, wgt);
+                    h_electron_relChIso05_simVtx->Fill(4.999, wgt);
             }
             if (pass4d) {
                 /*h_electron_relChIso02_dT->Fill(electron_chIso02_dT[iele] / pt, wgt);
@@ -535,42 +535,42 @@ int main(int argc, char** argv) {
                 if (electron_chIso02_dT[iele] / pt < 5)
                     h_electron_relChIso02_dT->Fill(electron_chIso02_dT[iele] / pt, wgt);
                 else
-                    h_electron_relChIso02_dT->(4.999, wgt);
+                    h_electron_relChIso02_dT->Fill(4.999, wgt);
 
                 if (electron_chIso03_dT[iele] / pt < 5)
                     h_electron_relChIso03_dT->Fill(electron_chIso03_dT[iele] / pt, wgt);
                 else
-                    h_electron_relChIso03_dT->(4.999, wgt);
+                    h_electron_relChIso03_dT->Fill(4.999, wgt);
 
                 if (electron_chIso04_dT[iele] / pt < 5)
                     h_electron_relChIso04_dT->Fill(electron_chIso04_dT[iele] / pt, wgt);
                 else
-                    h_electron_relChIso04_dT->(4.999, wgt);
+                    h_electron_relChIso04_dT->Fill(4.999, wgt);
 
                 if (electron_chIso05_dT[iele] / pt < 5)
                     h_electron_relChIso05_dT->Fill(electron_chIso05_dT[iele] / pt, wgt);
                 else
-                    h_electron_relChIso05_dT->(4.999, wgt);
+                    h_electron_relChIso05_dT->Fill(4.999, wgt);
 
                 if (electron_chIso02_dT_simVtx[iele] / pt < 5)
                     h_electron_relChIso02_dT_simVtx->Fill(electron_chIso02_dT_simVtx[iele] / pt, wgt);
                 else
-                    h_electron_relChIso02_dT_simVtx->(4.999, wgt);
+                    h_electron_relChIso02_dT_simVtx->Fill(4.999, wgt);
 
                 if (electron_chIso03_dT_simVtx[iele] / pt < 5)
                     h_electron_relChIso03_dT_simVtx->Fill(electron_chIso03_dT_simVtx[iele] / pt, wgt);
                 else
-                    h_electron_relChIso03_dT_simVtx->(4.999, wgt);
+                    h_electron_relChIso03_dT_simVtx->Fill(4.999, wgt);
 
                 if (electron_chIso04_dT_simVtx[iele] / pt < 5)
                     h_electron_relChIso04_dT_simVtx->Fill(electron_chIso04_dT_simVtx[iele] / pt, wgt);
                 else
-                    h_electron_relChIso04_dT_simVtx->(4.999, wgt);
+                    h_electron_relChIso04_dT_simVtx->Fill(4.999, wgt);
 
                 if (electron_chIso05_dT_simVtx[iele] / pt < 5)
                     h_electron_relChIso05_dT_simVtx->Fill(electron_chIso05_dT_simVtx[iele] / pt, wgt);
                 else
-                    h_electron_relChIso05_dT_simVtx->(4.999, wgt);
+                    h_electron_relChIso05_dT_simVtx->Fill(4.999, wgt);
 
                 /*h_electron_relChIso02_dT->Fill(electron_chIso02_dT[iele] / pt, wgt);
                 h_electron_relChIso03_dT->Fill(electron_chIso03_dT[iele] / pt, wgt);
@@ -579,22 +579,22 @@ int main(int argc, char** argv) {
                 if (electron_chIso02_dT_4D[iele] / pt < 5)
                     h_electron_relChIso02_dT_4D->Fill(electron_chIso02_dT_4D[iele] / pt, wgt);
                 else
-                    h_electron_relChIso02_dT_4D->(4.999, wgt);
+                    h_electron_relChIso02_dT_4D->Fill(4.999, wgt);
 
                 if (electron_chIso03_dT_4D[iele] / pt < 5)
                     h_electron_relChIso03_dT_4D->Fill(electron_chIso03_dT_4D[iele] / pt, wgt);
                 else
-                    h_electron_relChIso03_dT_4D->(4.999, wgt);
+                    h_electron_relChIso03_dT_4D->Fill(4.999, wgt);
 
                 if (electron_chIso04_dT_4D[iele] / pt < 5)
                     h_electron_relChIso04_dT_4D->Fill(electron_chIso04_dT_4D[iele] / pt, wgt);
                 else
-                    h_electron_relChIso04_dT_4D->(4.999, wgt);
+                    h_electron_relChIso04_dT_4D->Fill(4.999, wgt);
 
                 if (electron_chIso05_dT_4D[iele] / pt < 5)
                     h_electron_relChIso05_dT_4D->Fill(electron_chIso05_dT_4D[iele] / pt, wgt);
                 else
-                    h_electron_relChIso05_dT_4D->(4.999, wgt);
+                    h_electron_relChIso05_dT_4D->Fill(4.999, wgt);
             }
             // barrel
             if (fabs(electron_eta[iele]) < 1.479) {
@@ -606,22 +606,22 @@ int main(int argc, char** argv) {
                     if (electron_chIso02[iele] / pt < 5)
                         h_electron_relChIso02_barrel->Fill(electron_chIso02[iele] / pt, wgt);
                     else
-                        h_electron_relChIso02_barrel->(4.999, wgt);
+                        h_electron_relChIso02_barrel->Fill(4.999, wgt);
 
                     if (electron_chIso03[iele] / pt < 5)
                         h_electron_relChIso03_barrel->Fill(electron_chIso03[iele] / pt, wgt);
                     else
-                        h_electron_relChIso03_barrel->(4.999, wgt);
+                        h_electron_relChIso03_barrel->Fill(4.999, wgt);
 
                     if (electron_chIso04[iele] / pt < 5)
                         h_electron_relChIso04_barrel->Fill(electron_chIso04[iele] / pt, wgt);
                     else
-                        h_electron_relChIso04_barrel->(4.999, wgt);
+                        h_electron_relChIso04_barrel->Fill(4.999, wgt);
 
                     if (electron_chIso05[iele] / pt < 5)
                         h_electron_relChIso05_barrel->Fill(electron_chIso05[iele] / pt, wgt);
                     else
-                        h_electron_relChIso05_barrel->(4.999, wgt);
+                        h_electron_relChIso05_barrel->Fill(4.999, wgt);
                 }
                 if (pass4d) {
                     /*h_electron_relChIso02_dT_barrel->Fill(electron_chIso02_dT[iele] / pt, wgt);
@@ -631,22 +631,22 @@ int main(int argc, char** argv) {
                     if (electron_chIso02_dT[iele] / pt < 5)
                         h_electron_relChIso02_dT_barrel->Fill(electron_chIso02_dT[iele] / pt, wgt);
                     else
-                        h_electron_relChIso02_dT_barrel->(4.999, wgt);
+                        h_electron_relChIso02_dT_barrel->Fill(4.999, wgt);
 
                     if (electron_chIso03_dT[iele] / pt < 5)
                         h_electron_relChIso03_dT_barrel->Fill(electron_chIso03_dT[iele] / pt, wgt);
                     else
-                        h_electron_relChIso03_dT_barrel->(4.999, wgt);
+                        h_electron_relChIso03_dT_barrel->Fill(4.999, wgt);
 
                     if (electron_chIso04_dT[iele] / pt < 5)
                         h_electron_relChIso04_dT_barrel->Fill(electron_chIso04_dT[iele] / pt, wgt);
                     else
-                        h_electron_relChIso04_dT_barrel->(4.999, wgt);
+                        h_electron_relChIso04_dT_barrel->Fill(4.999, wgt);
 
                     if (electron_chIso05_dT[iele] / pt < 5)
                         h_electron_relChIso05_dT_barrel->Fill(electron_chIso05_dT[iele] / pt, wgt);
                     else
-                        h_electron_relChIso05_dT_barrel->(4.999, wgt);
+                        h_electron_relChIso05_dT_barrel->Fill(4.999, wgt);
                 }
             }
             // endcap
@@ -659,22 +659,22 @@ int main(int argc, char** argv) {
                     if (electron_chIso02[iele] / pt < 5)
                         h_electron_relChIso02_endcap->Fill(electron_chIso02[iele] / pt, wgt);
                     else
-                        h_electron_relChIso02_endcap->(4.999, wgt);
+                        h_electron_relChIso02_endcap->Fill(4.999, wgt);
 
                     if (electron_chIso03[iele] / pt < 5)
                         h_electron_relChIso03_endcap->Fill(electron_chIso03[iele] / pt, wgt);
                     else
-                        h_electron_relChIso03_endcap->(4.999, wgt);
+                        h_electron_relChIso03_endcap->Fill(4.999, wgt);
 
                     if (electron_chIso04[iele] / pt < 5)
                         h_electron_relChIso04_endcap->Fill(electron_chIso04[iele] / pt, wgt);
                     else
-                        h_electron_relChIso04_endcap->(4.999, wgt);
+                        h_electron_relChIso04_endcap->Fill(4.999, wgt);
 
                     if (electron_chIso05[iele] / pt < 5)
                         h_electron_relChIso05_endcap->Fill(electron_chIso05[iele] / pt, wgt);
                     else
-                        h_electron_relChIso05_endcap->(4.999, wgt);
+                        h_electron_relChIso05_endcap->Fill(4.999, wgt);
                 }
                 if (pass4d) {
                     /*h_electron_relChIso02_dT_endcap->Fill(electron_chIso02_dT[iele] / pt, wgt);
@@ -684,22 +684,22 @@ int main(int argc, char** argv) {
                     if (electron_chIso02_dT[iele] / pt < 5)
                         h_electron_relChIso02_dT_endcap->Fill(electron_chIso02_dT[iele] / pt, wgt);
                     else
-                        h_electron_relChIso02_dT_endcap->(4.999, wgt);
+                        h_electron_relChIso02_dT_endcap->Fill(4.999, wgt);
 
                     if (electron_chIso03_dT[iele] / pt < 5)
                         h_electron_relChIso03_dT_endcap->Fill(electron_chIso03_dT[iele] / pt, wgt);
                     else
-                        h_electron_relChIso03_dT_endcap->(4.999, wgt);
+                        h_electron_relChIso03_dT_endcap->Fill(4.999, wgt);
 
                     if (electron_chIso04_dT[iele] / pt < 5)
                         h_electron_relChIso04_dT_endcap->Fill(electron_chIso04_dT[iele] / pt, wgt);
                     else
-                        h_electron_relChIso04_dT_endcap->(4.999, wgt);
+                        h_electron_relChIso04_dT_endcap->Fill(4.999, wgt);
 
                     if (electron_chIso05_dT[iele] / pt < 5)
                         h_electron_relChIso05_dT_endcap->Fill(electron_chIso05_dT[iele] / pt, wgt);
                     else
-                        h_electron_relChIso05_dT_endcap->(4.999, wgt);
+                        h_electron_relChIso05_dT_endcap->Fill(4.999, wgt);
                 }
             }
 
