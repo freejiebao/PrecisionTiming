@@ -151,7 +151,7 @@ int main(int argc, char** argv) {
     TTreeReaderArray<float>        electron_chIso05_dT          = {fReader, "electron_chIso05_dT"};
     TTreeReaderArray<float>        electron_chIso05_dT_4D       = {fReader, "electron_chIso05_dT_4D"};
     TTreeReaderArray<float>        electron_chIso05_reldZ       = {fReader, "electron_chIso05_reldZ"};
-    TreeReaderArray<float>         electron_chIso05_reldZ_dT    = {fReader, "electron_chIso05_reldZ_dT"};
+    TTreeReaderArray<float>        electron_chIso05_reldZ_dT    = {fReader, "electron_chIso05_reldZ_dT"};
     TTreeReaderArray<float>        electron_chIso05_reldZ_dT_4D = {fReader, "electron_chIso05_reldZ_dT_4D"};
     TTreeReaderArray<float>        track_t                      = {fReader, "track_t"};
     TTreeReaderArray<float>        track_dz                     = {fReader, "track_dz"};
@@ -441,14 +441,14 @@ int main(int argc, char** argv) {
             nElectronsInEvent++;
 
             bool pass3D = fabs(electron_dz3D[iele]) < maxdz && fabs(electron_dxy3D[iele]) < maxdxy && !(*vtx3D_isFake);
-            bool pass4D = fabs(electron_dz4D[iele]) < maxdz && fabs(electron_dxy4D[iele]) < maxdxy && !(*vtx4D_isFake);
+            //bool pass4D = fabs(electron_dz4D[iele]) < maxdz && fabs(electron_dxy4D[iele]) < maxdxy && !(*vtx4D_isFake);
             bool pass4d = fabs(electron_dz[iele]) < maxdz && fabs(electron_dxy[iele]) < maxdxy && !(*vtx_isFake);  // pass4d used for the event not apply the dt cut
             if (nElectronsInEvent == 1) {
                 if (pass3D)
                     h_vtx_dz3D->Fill(*vtx3D_z - *vtxGen_z);
-                if (pass4D)
+                if (pass4d)
                     h_vtx_dz4D->Fill(*vtx4D_z - *vtxGen_z);
-                if (pass4D)
+                if (pass4d)
                     h_vtx_dt4D->Fill(*vtx4D_t - (*vtxGen_t) * 1000000000.);
                 if (pass4d)
                     h_vtx_dz->Fill(*vtx_z - *vtxGen_z);
@@ -456,9 +456,9 @@ int main(int argc, char** argv) {
                     h_vtx_dt->Fill(*vtx_t - (*vtxGen_t) * 1000000000.);
                 if (pass3D)
                     h_vtx_dz3D_pull->Fill((*vtx3D_z - *vtxGen_z) / *vtx3D_zErr);
-                if (pass4D)
+                if (pass4d)
                     h_vtx_dz4D_pull->Fill((*vtx4D_z - *vtxGen_z) / *vtx4D_zErr);
-                if (pass4D)
+                if (pass4d)
                     h_vtx_dt4D_pull->Fill((*vtx4D_t - (*vtxGen_t) * 1000000000.) / *vtx4D_tErr);
                 if (pass4d)
                     h_vtx_dz_pull->Fill((*vtx_z - *vtxGen_z) / *vtx_zErr);
@@ -571,8 +571,7 @@ int main(int argc, char** argv) {
                     h_electron_relChIso05_dT_simVtx->Fill(electron_chIso05_dT_simVtx[iele] / pt, wgt);
                 else
                     h_electron_relChIso05_dT_simVtx->(4.999, wgt);
-            }
-            if (pass4D) {
+
                 /*h_electron_relChIso02_dT->Fill(electron_chIso02_dT[iele] / pt, wgt);
                 h_electron_relChIso03_dT->Fill(electron_chIso03_dT[iele] / pt, wgt);
                 h_electron_relChIso04_dT->Fill(electron_chIso04_dT[iele] / pt, wgt);
@@ -715,7 +714,7 @@ int main(int argc, char** argv) {
     cout << endl;
 
     cout << "Saving histograms in file "
-         << "out_30ps_" << samplename << ".root" << endl;
+         << "out_30ps_" << samplename << endl;
 
     // -- save output file
     TFile* fout = new TFile("out_" + timeResolution + samplename, "recreate");
