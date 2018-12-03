@@ -357,7 +357,7 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
 
             float dz3Drel = std::abs(dz3D / std::sqrt(trackRef->dzError() * trackRef->dzError() + vtx3D.zError() * vtx3D.zError()));
             float dzrel   = std::abs(dz / std::sqrt(trackRef->dzError() * trackRef->dzError() + vtx.zError() * vtx.zError()));
-            float dz4Drel = std::abs(dz / std::sqrt(trackRef->dzError() * trackRef->dzError() + vtx4D.zError() * vtx4D.zError()));
+            float dz4Drel = std::abs(dz4D / std::sqrt(trackRef->dzError() * trackRef->dzError() + vtx4D.zError() * vtx4D.zError()));
 
             float dzsim  = std::abs(trackRef->vz() - genPV.position().z());
             float dxysim = sqrt(pow(trackRef->vx() - genPV.position().x(), 2) + pow(trackRef->vy() - genPV.position().y(), 2));
@@ -402,13 +402,13 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
                         for (unsigned int iRes = 0; iRes < timeResolutions_.size(); iRes++) {
                             double time_resol  = timeResolutions_[iRes];
                             double extra_resol = sqrt(time_resol * time_resol - 0.03 * 0.03);
-                            cout << iRes << "  " << time_resol << "  " << extra_resol << endl;
+                            //cout << iRes << "  " << time_resol << "  " << extra_resol << endl;
                             double dt         = 0.;
                             time[iCone][iRes] = -999.;
                             if (pfcand.isTimeValid()) {
                                 time[iCone][iRes] = pfcand.time() + gRandom->Gaus(0., extra_resol);
-                                dt                = std::abs(time[iCone][iRes] - genPV.position().t() * 1000000000.);
-                                cout << pfcand.time() << "   " << time[iCone][iRes] << "   " << genPV.position().t() * 1000000000. << endl;
+                                dt                = std::abs(time[iCone][iRes] - genPV.position().t());
+                                //cout << pfcand.time() << "   " << time[iCone][iRes] << "   " << genPV.position().t() * 1000000000. << endl;
                             }
                             else {
                                 dt = 0;
@@ -444,13 +444,6 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
                                 chIso_dT[iCone][iRes] += pfcand.pt();
                             }
                         }  // end loop over time resolutions
-
-                        // save info for tracks in the isolation cone
-                        if (isoConeDR_[iCone] == 0.3 && saveTracks_) {
-                            for (unsigned int iRes = 0; iRes < timeResolutions_.size(); iRes++) {
-                                evInfo[iRes].track_dz.push_back(trackRef->dz(vtx.position()));
-                            }
-                        }
                     }
                 }  // end loop over cone sizes
             }
