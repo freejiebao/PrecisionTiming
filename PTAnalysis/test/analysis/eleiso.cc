@@ -255,11 +255,17 @@ int main(int argc, char** argv) {
     TH1F* h_electron_relChIso02_dT_barrel = new TH1F("h_electron_relChIso02_dT_barrel", "h_electron_relChIso02_dT_barrel", 5000, 0, 5);
     h_electron_relChIso02_dT_barrel->GetXaxis()->SetTitle("relative charged isolation");
 
+    TH1F* h_electron_relChIso02_dT_4D_barrel = new TH1F("h_electron_relChIso02_dT_4D_barrel", "h_electron_relChIso02_dT_4D_barrel", 5000, 0, 5);
+    h_electron_relChIso02_dT_4D->GetXaxis()->SetTitle("relative charged isolation");
+
     TH1F* h_electron_relChIso03_barrel = new TH1F("h_electron_relChIso03_barrel", "h_electron_relChIso03_barrel", 5000, 0, 5);
     h_electron_relChIso03_barrel->GetXaxis()->SetTitle("relative charged isolation");
 
     TH1F* h_electron_relChIso03_dT_barrel = new TH1F("h_electron_relChIso03_dT_barrel", "h_electron_relChIso03_dT_barrel", 5000, 0, 5);
     h_electron_relChIso03_dT_barrel->GetXaxis()->SetTitle("relative charged isolation");
+
+    TH1F* h_electron_relChIso03_dT_4D_barrel = new TH1F("h_electron_relChIso03_dT_4D_barrel", "h_electron_relChIso03_dT_4D_barrel", 5000, 0, 5);
+    h_electron_relChIso03_dT_4D->GetXaxis()->SetTitle("relative charged isolation");
 
     TH1F* h_electron_relChIso04_barrel = new TH1F("h_electron_relChIso04_barrel", "h_electron_relChIso04_barrel", 5000, 0, 5);
     h_electron_relChIso04_barrel->GetXaxis()->SetTitle("relative charged isolation");
@@ -267,11 +273,17 @@ int main(int argc, char** argv) {
     TH1F* h_electron_relChIso04_dT_barrel = new TH1F("h_electron_relChIso04_dT_barrel", "h_electron_relChIso04_dT_barrel", 5000, 0, 5);
     h_electron_relChIso04_dT_barrel->GetXaxis()->SetTitle("relative charged isolation");
 
+    TH1F* h_electron_relChIso04_dT_4D_barrel = new TH1F("h_electron_relChIso04_dT_4D_barrel", "h_electron_relChIso04_dT_4D_barrel", 5000, 0, 5);
+    h_electron_relChIso04_dT_4D->GetXaxis()->SetTitle("relative charged isolation");
+
     TH1F* h_electron_relChIso05_barrel = new TH1F("h_electron_relChIso05_barrel", "h_electron_relChIso05_barrel", 5000, 0, 5);
     h_electron_relChIso05_barrel->GetXaxis()->SetTitle("relative charged isolation");
 
     TH1F* h_electron_relChIso05_dT_barrel = new TH1F("h_electron_relChIso05_dT_barrel", "h_electron_relChIso05_dT_barrel", 5000, 0, 5);
     h_electron_relChIso05_dT_barrel->GetXaxis()->SetTitle("relative charged isolation");
+
+    TH1F* h_electron_relChIso05_dT_4D_barrel = new TH1F("h_electron_relChIso05_dT_4D_barrel", "h_electron_relChIso05_dT_4D_barrel", 5000, 0, 5);
+    h_electron_relChIso05_dT_4D->GetXaxis()->SetTitle("relative charged isolation");
 
     // -- relative isolation endcap
     TH1F* h_electron_relChIso02_endcap = new TH1F("h_electron_relChIso02_endcap", "h_electron_relChIso02_endcap", 5000, 0, 5);
@@ -280,11 +292,17 @@ int main(int argc, char** argv) {
     TH1F* h_electron_relChIso02_dT_endcap = new TH1F("h_electron_relChIso02_dT_endcap", "h_electron_relChIso02_dT_endcap", 5000, 0, 5);
     h_electron_relChIso02_dT_endcap->GetXaxis()->SetTitle("relative charged isolation");
 
+    TH1F* h_electron_relChIso02_dT_4D_endcap = new TH1F("h_electron_relChIso02_dT_4D_endcap", "h_electron_relChIso02_dT_4D_endcap", 5000, 0, 5);
+    h_electron_relChIso02_dT_4D->GetXaxis()->SetTitle("relative charged isolation");
+
     TH1F* h_electron_relChIso03_endcap = new TH1F("h_electron_relChIso03_endcap", "h_electron_relChIso03_endcap", 5000, 0, 5);
     h_electron_relChIso03_endcap->GetXaxis()->SetTitle("relative charged isolation");
 
     TH1F* h_electron_relChIso03_dT_endcap = new TH1F("h_electron_relChIso03_dT_endcap", "h_electron_relChIso03_dT_endcap", 5000, 0, 5);
     h_electron_relChIso03_dT_endcap->GetXaxis()->SetTitle("relative charged isolation");
+
+    TH1F* h_electron_relChIso03_dT_4D_endcap = new TH1F("h_electron_relChIso03_dT_4D_endcap", "h_electron_relChIso03_dT_4D_endcap", 5000, 0, 5);
+    h_electron_relChIso03_dT_4D->GetXaxis()->SetTitle("relative charged isolation");
 
     TH1F* h_electron_relChIso04_endcap = new TH1F("h_electron_relChIso04_endcap", "h_electron_relChIso04_endcap", 5000, 0, 5);
     h_electron_relChIso04_endcap->GetXaxis()->SetTitle("relative charged isolation");
@@ -292,11 +310,17 @@ int main(int argc, char** argv) {
     TH1F* h_electron_relChIso04_dT_endcap = new TH1F("h_electron_relChIso04_dT_endcap", "h_electron_relChIso04_dT_endcap", 5000, 0, 5);
     h_electron_relChIso04_dT_endcap->GetXaxis()->SetTitle("relative charged isolation");
 
+    TH1F* h_electron_relChIso04_dT_4D_endcap = new TH1F("h_electron_relChIso04_dT_4D_endcap", "h_electron_relChIso04_dT_4D_endcap", 5000, 0, 5);
+    h_electron_relChIso04_dT_4D->GetXaxis()->SetTitle("relative charged isolation");
+
     TH1F* h_electron_relChIso05_endcap = new TH1F("h_electron_relChIso05_endcap", "h_electron_relChIso05_endcap", 5000, 0, 5);
     h_electron_relChIso05_endcap->GetXaxis()->SetTitle("relative charged isolation");
 
     TH1F* h_electron_relChIso05_dT_endcap = new TH1F("h_electron_relChIso05_dT_endcap", "h_electron_relChIso05_dT_endcap", 5000, 0, 5);
     h_electron_relChIso05_dT_endcap->GetXaxis()->SetTitle("relative charged isolation");
+
+    TH1F* h_electron_relChIso05_dT_4D_endcap = new TH1F("h_electron_relChIso05_dT_4D_endcap", "h_electron_relChIso05_dT_4D_endcap", 5000, 0, 5);
+    h_electron_relChIso05_dT_4D->GetXaxis()->SetTitle("relative charged isolation");
 
     // chIso wrt to sim vertex
     TH1F* h_electron_relChIso02_simVtx = new TH1F("h_electron_relChIso02_simVtx", "h_electron_relChIso02_simVtx", 5000, 0, 5);
@@ -381,6 +405,32 @@ int main(int argc, char** argv) {
     TH1F* h_electron_relChIso03_ratio_endcap = new TH1F("h_electron_relChIso03_ratio_endcap", "h_electron_relChIso03_ratio_endcap", 1000, 0, 2);
     h_electron_relChIso03_ratio_endcap->GetXaxis()->SetTitle("relChIso_{ZTcut}/relChIso_{Zcut}");
 
+    // efficiency plots
+    /*TH1D* h_electron_relChIso03_efficiency_3D = new TH1D("h_electron_relChIso03_efficiency_3D", "h_electron_relChIso03_efficiency_3D", 5000, 0, 5);
+    h_electron_relChIso03_efficiency_3D->GetXaxis()->SetTitle("#epsilon");
+    TH1D* h_electron_relChIso03_efficiency = new TH1D("h_electron_relChIso03_efficiency", "h_electron_relChIso03_efficiency", 5000, 0, 5);
+    h_electron_relChIso03_efficiency->GetXaxis()->SetTitle("#epsilon");
+    TH1D* h_electron_relChIso03_efficiency_4D = new TH1D("h_electron_relChIso03_efficiency_4D", "h_electron_relChIso03_efficiency_4D", 5000, 0, 5);
+    h_electron_relChIso03_efficiency_4D->GetXaxis()->SetTitle("#epsilon");
+    TH1D* h_electron_relChIso03_efficiency_gen = new TH1D("h_electron_relChIso03_efficiency_gen", "h_electron_relChIso03_efficiency_gen", 5000, 0, 5);
+    h_electron_relChIso03_efficiency_gen->GetXaxis()->SetTitle("#epsilon");
+    TH1D* h_electron_relChIso03_efficiency_3D_barrel = new TH1D("h_electron_relChIso03_efficiency_3D_barrel", "h_electron_relChIso03_efficiency_3D_barrel", 5000, 0, 5);
+    h_electron_relChIso03_efficiency_3D_barrel->GetXaxis()->SetTitle("#epsilon");
+    TH1D* h_electron_relChIso03_efficiency_barrel = new TH1D("h_electron_relChIso03_efficiency_barrel", "h_electron_relChIso03_efficiency_barrel", 5000, 0, 5);
+    h_electron_relChIso03_efficiency_barrel->GetXaxis()->SetTitle("#epsilon");
+    TH1D* h_electron_relChIso03_efficiency_4D_barrel = new TH1D("h_electron_relChIso03_efficiency_4D_barrel", "h_electron_relChIso03_efficiency_4D_barrel", 5000, 0, 5);
+    h_electron_relChIso03_efficiency_4D_barrel->GetXaxis()->SetTitle("#epsilon");
+    TH1D* h_electron_relChIso03_efficiency_gen_barrel = new TH1D("h_electron_relChIso03_efficiency_gen_barrel", "h_electron_relChIso03_efficiency_gen_barrel", 5000, 0, 5);
+    h_electron_relChIso03_efficiency_gen_barrel->GetXaxis()->SetTitle("#epsilon");
+    TH1D* h_electron_relChIso03_efficiency_3D_endcap = new TH1D("h_electron_relChIso03_efficiency_3D_endcap", "h_electron_relChIso03_efficiency_3D_endcap", 5000, 0, 5);
+    h_electron_relChIso03_efficiency_3D_endcap->GetXaxis()->SetTitle("#epsilon");
+    TH1D* h_electron_relChIso03_efficiency_endcap = new TH1D("h_electron_relChIso03_efficiency_endcap", "h_electron_relChIso03_efficiency_endcap", 5000, 0, 5);
+    h_electron_relChIso03_efficiency_endcap->GetXaxis()->SetTitle("#epsilon");
+    TH1D* h_electron_relChIso03_efficiency_4D_endcap = new TH1D("h_electron_relChIso03_efficiency_4D_endcap", "h_electron_relChIso03_efficiency_4D_endcap", 5000, 0, 5);
+    h_electron_relChIso03_efficiency_4D_endcap->GetXaxis()->SetTitle("#epsilon");
+    TH1D* h_electron_relChIso03_efficiency_gen_endcap = new TH1D("h_electron_relChIso03_efficiency_gen_endcap", "h_electron_relChIso03_efficiency_gen_endcap", 5000, 0, 5);
+    h_electron_relChIso03_efficiency_gen_endcap->GetXaxis()->SetTitle("#epsilon");*/
+
     /*
     TH1F* h_electron_relChIso03_diff = new TH1F("h_electron_relChIso03_diff", "h_electron_relChIso03_diff", 1000, 0, 1);
     h_electron_relChIso03_diff->GetXaxis()->SetTitle("(relChIso_{Zcut}-relChIso_{ZTcut})/relChIso_{Zcut}");
@@ -417,7 +467,7 @@ int main(int argc, char** argv) {
             if (abs(electron_chIso03[iele] - 0.) < 0.00000001)
                 continue;
             notzero++;
-            if (passVetoId[iele] == 1)
+            if (!(passLooseId[iele] == 1))
                 continue;
             // -- pt/eta reweighting
             if (applyPtReweighting) {
@@ -442,28 +492,29 @@ int main(int argc, char** argv) {
 
             bool pass3D = fabs(electron_dz3D[iele]) < maxdz && fabs(electron_dxy3D[iele]) < maxdxy && !(*vtx3D_isFake);
             //bool pass4D = fabs(electron_dz4D[iele]) < maxdz && fabs(electron_dxy4D[iele]) < maxdxy && !(*vtx4D_isFake);
-            bool pass4d = fabs(electron_dz[iele]) < maxdz && fabs(electron_dxy[iele]) < maxdxy && !(*vtx_isFake);  // pass4d used for the event not apply the dt cut
+            bool pass4d = fabs(electron_dz[iele]) < maxdz && fabs(electron_dxy[iele]) < maxdxy && !(*vtx_isFake);    // pass4d used for the event not apply the dt cut
+            bool pass4D = fabs(electron_dz[iele]) < maxdz && fabs(electron_dxy[iele]) < maxdxy && !(*vtx4D_isFake);  // pass4d used for the event not apply the dt cut
             if (nElectronsInEvent == 1) {
                 if (pass3D)
                     h_vtx_dz3D->Fill(*vtx3D_z - *vtxGen_z);
-                if (pass4d)
+                if (pass4D)
                     h_vtx_dz4D->Fill(*vtx4D_z - *vtxGen_z);
-                if (pass4d)
-                    h_vtx_dt4D->Fill(*vtx4D_t - (*vtxGen_t) * 1000000000.);
+                if (pass4D)
+                    h_vtx_dt4D->Fill(*vtx4D_t - (*vtxGen_t));
                 if (pass4d)
                     h_vtx_dz->Fill(*vtx_z - *vtxGen_z);
                 if (pass4d)
-                    h_vtx_dt->Fill(*vtx_t - (*vtxGen_t) * 1000000000.);
+                    h_vtx_dt->Fill(*vtx_t - (*vtxGen_t));
                 if (pass3D)
                     h_vtx_dz3D_pull->Fill((*vtx3D_z - *vtxGen_z) / *vtx3D_zErr);
-                if (pass4d)
+                if (pass4D)
                     h_vtx_dz4D_pull->Fill((*vtx4D_z - *vtxGen_z) / *vtx4D_zErr);
-                if (pass4d)
-                    h_vtx_dt4D_pull->Fill((*vtx4D_t - (*vtxGen_t) * 1000000000.) / *vtx4D_tErr);
+                if (pass4D)
+                    h_vtx_dt4D_pull->Fill((*vtx4D_t - (*vtxGen_t)) / *vtx4D_tErr);
                 if (pass4d)
                     h_vtx_dz_pull->Fill((*vtx_z - *vtxGen_z) / *vtx_zErr);
                 if (pass4d)
-                    h_vtx_dt_pull->Fill((*vtx_t - (*vtxGen_t) * 1000000000.) / *vtx_tErr);
+                    h_vtx_dt_pull->Fill((*vtx_t - (*vtxGen_t)) / *vtx_tErr);
             }
 
             h_electron_pt->Fill(pt, wgt);
@@ -500,7 +551,7 @@ int main(int argc, char** argv) {
                 if (electron_chIso04[iele] / pt < 5)
                     h_electron_relChIso04->Fill(electron_chIso04[iele] / pt, wgt);
                 else
-                    h_electron_relChIso04->(4.999, wgt);
+                    h_electron_relChIso04->Fill(4.999, wgt);
 
                 if (electron_chIso05[iele] / pt < 5)
                     h_electron_relChIso05->Fill(electron_chIso05[iele] / pt, wgt);
@@ -571,11 +622,12 @@ int main(int argc, char** argv) {
                     h_electron_relChIso05_dT_simVtx->Fill(electron_chIso05_dT_simVtx[iele] / pt, wgt);
                 else
                     h_electron_relChIso05_dT_simVtx->Fill(4.999, wgt);
-
+            }
+            if (pass4D) {
                 /*h_electron_relChIso02_dT->Fill(electron_chIso02_dT[iele] / pt, wgt);
-                h_electron_relChIso03_dT->Fill(electron_chIso03_dT[iele] / pt, wgt);
-                h_electron_relChIso04_dT->Fill(electron_chIso04_dT[iele] / pt, wgt);
-                h_electron_relChIso05_dT->Fill(electron_chIso05_dT[iele] / pt, wgt);*/
+              h_electron_relChIso03_dT->Fill(electron_chIso03_dT[iele] / pt, wgt);
+              h_electron_relChIso04_dT->Fill(electron_chIso04_dT[iele] / pt, wgt);
+              h_electron_relChIso05_dT->Fill(electron_chIso05_dT[iele] / pt, wgt);*/
                 if (electron_chIso02_dT_4D[iele] / pt < 5)
                     h_electron_relChIso02_dT_4D->Fill(electron_chIso02_dT_4D[iele] / pt, wgt);
                 else
@@ -622,6 +674,26 @@ int main(int argc, char** argv) {
                         h_electron_relChIso05_barrel->Fill(electron_chIso05[iele] / pt, wgt);
                     else
                         h_electron_relChIso05_barrel->Fill(4.999, wgt);
+
+                    if (electron_chIso02_simVtx[iele] / pt < 5)
+                        h_electron_relChIso02_simVtx_barrel->Fill(electron_chIso02_simVtx[iele] / pt, wgt);
+                    else
+                        h_electron_relChIso02_simVtx_barrel->Fill(4.999, wgt);
+
+                    if (electron_chIso03_simVtx[iele] / pt < 5)
+                        h_electron_relChIso03_simVtx_barrel->Fill(electron_chIso03_simVtx[iele] / pt, wgt);
+                    else
+                        h_electron_relChIso03_simVtx_barrel->Fill(4.999, wgt);
+
+                    if (electron_chIso04_simVtx[iele] / pt < 5)
+                        h_electron_relChIso04_simVtx_barrel->Fill(electron_chIso04_simVtx[iele] / pt, wgt);
+                    else
+                        h_electron_relChIso04_simVtx_barrel->Fill(4.999, wgt);
+
+                    if (electron_chIso05_simVtx[iele] / pt < 5)
+                        h_electron_relChIso05_simVtx_barrel->Fill(electron_chIso05_simVtx[iele] / pt, wgt);
+                    else
+                        h_electron_relChIso05_simVtx_barrel->Fill(4.999, wgt);
                 }
                 if (pass4d) {
                     /*h_electron_relChIso02_dT_barrel->Fill(electron_chIso02_dT[iele] / pt, wgt);
@@ -647,6 +719,51 @@ int main(int argc, char** argv) {
                         h_electron_relChIso05_dT_barrel->Fill(electron_chIso05_dT[iele] / pt, wgt);
                     else
                         h_electron_relChIso05_dT_barrel->Fill(4.999, wgt);
+
+                    if (electron_chIso02_dT_simVtx[iele] / pt < 5)
+                        h_electron_relChIso02_dT_simVtx_barrel->Fill(electron_chIso02_dT_simVtx[iele] / pt, wgt);
+                    else
+                        h_electron_relChIso02_dT_simVtx_barrel->Fill(4.999, wgt);
+
+                    if (electron_chIso03_dT_simVtx[iele] / pt < 5)
+                        h_electron_relChIso03_dT_simVtx_barrel->Fill(electron_chIso03_dT_simVtx[iele] / pt, wgt);
+                    else
+                        h_electron_relChIso03_dT_simVtx_barrel->Fill(4.999, wgt);
+
+                    if (electron_chIso04_dT_simVtx[iele] / pt < 5)
+                        h_electron_relChIso04_dT_simVtx_barrel->Fill(electron_chIso04_dT_simVtx[iele] / pt, wgt);
+                    else
+                        h_electron_relChIso04_dT_simVtx_barrel->Fill(4.999, wgt);
+
+                    if (electron_chIso05_dT_simVtx[iele] / pt < 5)
+                        h_electron_relChIso05_dT_simVtx_barrel->Fill(electron_chIso05_dT_simVtx[iele] / pt, wgt);
+                    else
+                        h_electron_relChIso05_dT_simVtx_barrel->Fill(4.999, wgt);
+                }
+                if (pass4D) {
+                    /*h_electron_relChIso02_dT->Fill(electron_chIso02_dT[iele] / pt, wgt);
+                  h_electron_relChIso03_dT->Fill(electron_chIso03_dT[iele] / pt, wgt);
+                  h_electron_relChIso04_dT->Fill(electron_chIso04_dT[iele] / pt, wgt);
+                  h_electron_relChIso05_dT->Fill(electron_chIso05_dT[iele] / pt, wgt);*/
+                    if (electron_chIso02_dT_4D[iele] / pt < 5)
+                        h_electron_relChIso02_dT_4D_barrel->Fill(electron_chIso02_dT_4D[iele] / pt, wgt);
+                    else
+                        h_electron_relChIso02_dT_4D_barrel->Fill(4.999, wgt);
+
+                    if (electron_chIso03_dT_4D[iele] / pt < 5)
+                        h_electron_relChIso03_dT_4D_barrel->Fill(electron_chIso03_dT_4D[iele] / pt, wgt);
+                    else
+                        h_electron_relChIso03_dT_4D_barrel->Fill(4.999, wgt);
+
+                    if (electron_chIso04_dT_4D[iele] / pt < 5)
+                        h_electron_relChIso04_dT_4D_barrel->Fill(electron_chIso04_dT_4D[iele] / pt, wgt);
+                    else
+                        h_electron_relChIso04_dT_4D_barrel->Fill(4.999, wgt);
+
+                    if (electron_chIso05_dT_4D[iele] / pt < 5)
+                        h_electron_relChIso05_dT_4D_barrel->Fill(electron_chIso05_dT_4D[iele] / pt, wgt);
+                    else
+                        h_electron_relChIso05_dT_4D_barrel->Fill(4.999, wgt);
                 }
             }
             // endcap
@@ -675,6 +792,26 @@ int main(int argc, char** argv) {
                         h_electron_relChIso05_endcap->Fill(electron_chIso05[iele] / pt, wgt);
                     else
                         h_electron_relChIso05_endcap->Fill(4.999, wgt);
+
+                    if (electron_chIso02_simVtx[iele] / pt < 5)
+                        h_electron_relChIso02_simVtx_endcap->Fill(electron_chIso02_simVtx[iele] / pt, wgt);
+                    else
+                        h_electron_relChIso02_simVtx_endcap->Fill(4.999, wgt);
+
+                    if (electron_chIso03_simVtx[iele] / pt < 5)
+                        h_electron_relChIso03_simVtx_endcap->Fill(electron_chIso03_simVtx[iele] / pt, wgt);
+                    else
+                        h_electron_relChIso03_simVtx_endcap->Fill(4.999, wgt);
+
+                    if (electron_chIso04_simVtx[iele] / pt < 5)
+                        h_electron_relChIso04_simVtx_endcap->Fill(electron_chIso04_simVtx[iele] / pt, wgt);
+                    else
+                        h_electron_relChIso04_simVtx_endcap->Fill(4.999, wgt);
+
+                    if (electron_chIso05_simVtx[iele] / pt < 5)
+                        h_electron_relChIso05_simVtx_endcap->Fill(electron_chIso05_simVtx[iele] / pt, wgt);
+                    else
+                        h_electron_relChIso05_simVtx_endcap->Fill(4.999, wgt);
                 }
                 if (pass4d) {
                     /*h_electron_relChIso02_dT_endcap->Fill(electron_chIso02_dT[iele] / pt, wgt);
@@ -700,6 +837,51 @@ int main(int argc, char** argv) {
                         h_electron_relChIso05_dT_endcap->Fill(electron_chIso05_dT[iele] / pt, wgt);
                     else
                         h_electron_relChIso05_dT_endcap->Fill(4.999, wgt);
+
+                    if (electron_chIso02_dT_simVtx[iele] / pt < 5)
+                        h_electron_relChIso02_dT_simVtx_endcap->Fill(electron_chIso02_dT_simVtx[iele] / pt, wgt);
+                    else
+                        h_electron_relChIso02_dT_simVtx_endcap->Fill(4.999, wgt);
+
+                    if (electron_chIso03_dT_simVtx[iele] / pt < 5)
+                        h_electron_relChIso03_dT_simVtx_endcap->Fill(electron_chIso03_dT_simVtx[iele] / pt, wgt);
+                    else
+                        h_electron_relChIso03_dT_simVtx_endcap->Fill(4.999, wgt);
+
+                    if (electron_chIso04_dT_simVtx[iele] / pt < 5)
+                        h_electron_relChIso04_dT_simVtx_endcap->Fill(electron_chIso04_dT_simVtx[iele] / pt, wgt);
+                    else
+                        h_electron_relChIso04_dT_simVtx_endcap->Fill(4.999, wgt);
+
+                    if (electron_chIso05_dT_simVtx[iele] / pt < 5)
+                        h_electron_relChIso05_dT_simVtx_endcap->Fill(electron_chIso05_dT_simVtx[iele] / pt, wgt);
+                    else
+                        h_electron_relChIso05_dT_simVtx_endcap->Fill(4.999, wgt);
+                }
+                if (pass4D) {
+                    /*h_electron_relChIso02_dT->Fill(electron_chIso02_dT[iele] / pt, wgt);
+                  h_electron_relChIso03_dT->Fill(electron_chIso03_dT[iele] / pt, wgt);
+                  h_electron_relChIso04_dT->Fill(electron_chIso04_dT[iele] / pt, wgt);
+                  h_electron_relChIso05_dT->Fill(electron_chIso05_dT[iele] / pt, wgt);*/
+                    if (electron_chIso02_dT_4D[iele] / pt < 5)
+                        h_electron_relChIso02_dT_4D_endcap->Fill(electron_chIso02_dT_4D[iele] / pt, wgt);
+                    else
+                        h_electron_relChIso02_dT_4D_endcap->Fill(4.999, wgt);
+
+                    if (electron_chIso03_dT_4D[iele] / pt < 5)
+                        h_electron_relChIso03_dT_4D_endcap->Fill(electron_chIso03_dT_4D[iele] / pt, wgt);
+                    else
+                        h_electron_relChIso03_dT_4D_endcap->Fill(4.999, wgt);
+
+                    if (electron_chIso04_dT_4D[iele] / pt < 5)
+                        h_electron_relChIso04_dT_4D_endcap->Fill(electron_chIso04_dT_4D[iele] / pt, wgt);
+                    else
+                        h_electron_relChIso04_dT_4D_endcap->Fill(4.999, wgt);
+
+                    if (electron_chIso05_dT_4D[iele] / pt < 5)
+                        h_electron_relChIso05_dT_4D_endcap->Fill(electron_chIso05_dT_4D[iele] / pt, wgt);
+                    else
+                        h_electron_relChIso05_dT_4D_endcap->Fill(4.999, wgt);
                 }
             }
 
@@ -709,6 +891,7 @@ int main(int argc, char** argv) {
         }
         i++;
     }  // end loop over events
+
     cout << "total:" << total << endl;
     cout << "notzero:" << notzero << endl;
     cout << endl;
@@ -778,31 +961,41 @@ int main(int argc, char** argv) {
 
     h_electron_relChIso02_simVtx->Write();
     h_electron_relChIso02_dT_simVtx->Write();
-    /*h_electron_relChIso02_simVtx_barrel->Write();
+    h_electron_relChIso02_simVtx_barrel->Write();
     h_electron_relChIso02_dT_simVtx_barrel->Write();
     h_electron_relChIso02_simVtx_endcap->Write();
-    h_electron_relChIso02_dT_simVtx_endcap->Write();*/
+    h_electron_relChIso02_dT_simVtx_endcap->Write();
 
     h_electron_relChIso03_simVtx->Write();
     h_electron_relChIso03_dT_simVtx->Write();
-    /*h_electron_relChIso03_simVtx_barrel->Write();
+    h_electron_relChIso03_simVtx_barrel->Write();
     h_electron_relChIso03_dT_simVtx_barrel->Write();
     h_electron_relChIso03_simVtx_endcap->Write();
-    h_electron_relChIso03_dT_simVtx_endcap->Write();*/
+    h_electron_relChIso03_dT_simVtx_endcap->Write();
 
     h_electron_relChIso04_simVtx->Write();
     h_electron_relChIso04_dT_simVtx->Write();
-    /*h_electron_relChIso04_simVtx_barrel->Write();
+    h_electron_relChIso04_simVtx_barrel->Write();
     h_electron_relChIso04_dT_simVtx_barrel->Write();
     h_electron_relChIso04_simVtx_endcap->Write();
-    h_electron_relChIso04_dT_simVtx_endcap->Write();*/
+    h_electron_relChIso04_dT_simVtx_endcap->Write();
 
     h_electron_relChIso05_simVtx->Write();
     h_electron_relChIso05_dT_simVtx->Write();
-    /*h_electron_relChIso05_simVtx_barrel->Write();
+    h_electron_relChIso05_simVtx_barrel->Write();
     h_electron_relChIso05_dT_simVtx_barrel->Write();
     h_electron_relChIso05_simVtx_endcap->Write();
-    h_electron_relChIso05_dT_simVtx_endcap->Write();*/
+    h_electron_relChIso05_dT_simVtx_endcap->Write();
+
+    h_electron_relChIso02_dT_4D_barrel->Write();
+    h_electron_relChIso03_dT_4D_barrel->Write();
+    h_electron_relChIso04_dT_4D_barrel->Write();
+    h_electron_relChIso05_dT_4D_barrel->Write();
+
+    h_electron_relChIso02_dT_4D_endcap->Write();
+    h_electron_relChIso03_dT_4D_endcap->Write();
+    h_electron_relChIso04_dT_4D_endcap->Write();
+    h_electron_relChIso05_dT_4D_endcap->Write();
 
     fout->Close();
 }
