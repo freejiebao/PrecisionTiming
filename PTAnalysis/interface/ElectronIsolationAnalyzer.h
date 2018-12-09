@@ -85,9 +85,9 @@ struct eventInfo {
     float vtx4D_zErr;
     float vtx4D_t;
     float vtx4D_tErr;
-    float vtx_isFake;
-    float vtx3D_isFake;
-    float vtx4D_isFake;
+    int   vtx_isFake;
+    int   vtx3D_isFake;
+    int   vtx4D_isFake;
 
     // -- store the dr between the electron and pfCand, the use it to find the dr of veto cone.
     vector<float> drep;
