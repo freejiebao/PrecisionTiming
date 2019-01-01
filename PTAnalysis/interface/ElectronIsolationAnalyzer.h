@@ -46,6 +46,7 @@
 #include "DataFormats/Common/interface/View.h"
 
 #include "TTree.h"
+#include <TRandom.h>
 #include <vector>
 
 //
@@ -70,25 +71,34 @@ struct eventInfo {
     vector<float> track_phi;
     vector<float> track_dz;
     vector<float> track_dz3D;
-    vector<float> track_dz4D;
+    vector<float> track_dxy3D;
+    vector<float> track_dxy;
     vector<float> track_t;
+    vector<int>   track_eleIndex;
 
-    float vtxGen_z;
-    float vtxGen_t;
-    float vtx_z;
-    float vtx_zErr;
-    float vtx_t;
-    float vtx_tErr;
-    float vtx3D_z;
-    float vtx3D_zErr;
-    float vtx4D_z;
-    float vtx4D_zErr;
-    float vtx4D_t;
-    float vtx4D_tErr;
-    int   vtx_isFake;
-    int   vtx3D_isFake;
-    int   vtx4D_isFake;
-
+    float  vtxGen_z;
+    float  vtxGen_t;
+    float  vtx_z;
+    float  vtx_zErr;
+    float  vtx_t;
+    float  vtx_tErr;
+    float  vtx3D_z;
+    float  vtx3D_zErr;
+    int    vtx_isFake;
+    int    vtx3D_isFake;
+    double rho;
+    double rho_calo;
+    // -- info of electron work point
+    vector<double> electron_sigmaIetaIeta;
+    vector<double> electron_dEtaInSeed;
+    vector<double> electron_dPhiIn;
+    vector<double> electron_hoe;
+    vector<double> electron_energy_sc;
+    vector<double> electron_pf_isolation;
+    vector<double> electron_pf_isolation_calo;
+    vector<double> electron_ooEmooP;
+    vector<double> electron_mHits;
+    vector<double> electron_pass_conversion_veto;
     // -- store the dr between the electron and pfCand, the use it to find the dr of veto cone.
     vector<float> drep;
     vector<float> electron_pt;
@@ -99,28 +109,48 @@ struct eventInfo {
     vector<float> electron_dxy;
     vector<float> electron_dz3D;
     vector<float> electron_dxy3D;
-    vector<float> electron_dz4D;
-    vector<float> electron_dxy4D;
     vector<float> electron_t;
-    vector<bool>  electron_isPrompt;
-    vector<bool>  electron_isMatchedToGenJet;
-    vector<bool>  electron_isMatchedToGenJet2;
+    vector<int>   electron_isPrompt;
+    vector<int>   electron_isMatchedToGenJet;
+    vector<int>   electron_isMatchedToGenJet2;
+    vector<int>   electron_isFromTauDecay;
     vector<float> electron_r9;
-    vector<float> electron_chIso[10];
-    vector<float> electron_chIso_dT[10][10];
-    vector<float> electron_chIso_simVtx[10];
-    vector<float> electron_chIso_dT_simVtx[10][10];
-    vector<float> electron_chIso_dT_4D[10][10];
-    vector<float> electron_chIso_reldZ[10];
-    vector<float> electron_chIso_reldZ_dT[10][10];
-    vector<float> electron_chIso_reldZ_dT_4D[10][10];
-    vector<int>   track_elecIndex;
 
+    vector<float> electron_chIso_dZ05_simVtx;
+    vector<float> electron_chIso_dZ05_dT_simVtx;
+
+    vector<float> electron_chIso_dZ1_simVtx;
+    vector<float> electron_chIso_dZ1_dT_simVtx;
+
+    vector<float> electron_chIso_dZ2_simVtx;
+    vector<float> electron_chIso_dZ2_dT_simVtx;
+
+    vector<float> electron_chIso_dZ05;
+    vector<float> electron_chIso_dZ05_dT;
+
+    vector<float> electron_chIso_dZ1;
+    vector<float> electron_chIso_dZ1_dT;
+
+    vector<float> electron_chIso_dZ2;
+    vector<float> electron_chIso_dZ2_dT;
+
+    vector<float> electron_chIso_reldZ;
+    vector<float> electron_chIso_reldZ_dT;
+
+    vector<float> electron_chIso_dZmu05;
+    vector<float> electron_chIso_dZmu05_dTmu;
+
+    vector<float> electron_chIso_dZmu1;
+    vector<float> electron_chIso_dZmu1_dTmu;
+
+    vector<float> electron_chIso_dZmu2;
+    vector<float> electron_chIso_dZmu2_dTmu;
+    /*
     vector<int> passVetoId;
     vector<int> passLooseId;
     vector<int> passMediumId;
     vector<int> passTightId;
-    //vector<int> passHEEPId;
+    */
 };
 
 class ElectronIsolationAnalyzer : public edm::EDAnalyzer {
@@ -133,7 +163,7 @@ public:
 
 private:
     virtual void beginJob();
-    virtual void analyze(const edm::Event&, const edm::EventSetup&) override;
+    virtual void analyze(const edm::Event&, const edm::EventSetup&);
     virtual void endJob();
 
     void initEventStructure();
@@ -143,18 +173,21 @@ private:
     EDGetTokenT<float>                        genT0Token_;
     EDGetTokenT<vector<PileupSummaryInfo>>    PileUpToken_;
     EDGetTokenT<View<reco::Vertex>>           vertexToken3D_;
-    EDGetTokenT<View<reco::Vertex>>           vertexToken4D_;
     EDGetTokenT<edm::View<reco::PFCandidate>> pfcandToken_;
     EDGetTokenT<View<reco::GenParticle>>      genPartToken_;
     EDGetTokenT<vector<SimVertex>>            genVertexToken_;
     EDGetTokenT<View<reco::GenJet>>           genJetsToken_;
     EDGetTokenT<View<reco::GsfElectron>>      barrelElectronsToken_;
-    //EDGetTokenT<View<reco::GsfElectron>>      endcapElectronsToken_;
+    EDGetTokenT<View<reco::GsfElectron>>      endcapElectronsToken_;
+    EDGetTokenT<double>                       RhoToken_;
+    EffectiveAreas                            effectiveAreas_;
+    /*
     // ID decisions objects
     EDGetTokenT<edm::ValueMap<bool>> eleVetoIdMapToken_;
     EDGetTokenT<edm::ValueMap<bool>> eleLooseIdMapToken_;
     EDGetTokenT<edm::ValueMap<bool>> eleMediumIdMapToken_;
     EDGetTokenT<edm::ValueMap<bool>> eleTightIdMapToken_;
+    */
     //--- outputs
     edm::Service<TFileService> fs_;
     TTree*                     eventTree[10];
@@ -164,13 +197,16 @@ private:
     vector<double> timeResolutions_;
     vector<double> isoConeDR_;
     bool           saveTracks_;
-    float          maxDz_;
-    float          minDr_;
+    double         maxDz_;
+    double         minDr_;
+    double         minTrackPt_;
+    bool           useVertexClosestToGen_;
     bool           isAOD_;
 };
 
 bool  isPromptElectron(const reco::GsfElectron& electron, const edm::View<reco::GenParticle>& genParticles);
 bool  isMatchedToGenJet(const reco::GsfElectron& electron, const edm::View<reco::GenJet>& genJet);
 bool  isMatchedToGenJet2(const reco::GsfElectron& electron, const edm::View<reco::GenJet>& genJets);
+bool  isFromTau(const reco::GsfElectron& electron, const edm::View<reco::GenParticle>& genParticles);
 float Get_dEtaInSeed(const reco::GsfElectron& ele);
 float Get_epCut(const reco::Candidate& ele);
