@@ -69,22 +69,22 @@ struct eventInfo {
     vector<float> track_pt;
     vector<float> track_eta;
     vector<float> track_phi;
-    vector<float> track_dz;
+    vector<float> track_dz4D;
     vector<float> track_dz3D;
     vector<float> track_dxy3D;
-    vector<float> track_dxy;
+    vector<float> track_dxy4D;
     vector<float> track_t;
-    vector<int>   track_eleIndex;
+    vector<int>   track_elecIndex;
 
     float  vtxGen_z;
     float  vtxGen_t;
-    float  vtx_z;
-    float  vtx_zErr;
-    float  vtx_t;
-    float  vtx_tErr;
+    float  vtx4D_z;
+    float  vtx4D_zErr;
+    float  vtx4D_t;
+    float  vtx4D_tErr;
     float  vtx3D_z;
     float  vtx3D_zErr;
-    int    vtx_isFake;
+    int    vtx4D_isFake;
     int    vtx3D_isFake;
     double rho;
     double rho_calo;
@@ -106,8 +106,8 @@ struct eventInfo {
     vector<float> electron_eta;
     vector<float> electron_phi;
     vector<float> electron_sigmaIetaIeta;
-    vector<float> electron_dz;
-    vector<float> electron_dxy;
+    vector<float> electron_dz4D;
+    vector<float> electron_dxy4D;
     vector<float> electron_dz3D;
     vector<float> electron_dxy3D;
     vector<float> electron_t;
@@ -138,14 +138,14 @@ struct eventInfo {
     vector<float> electron_chIso_reldZ;
     vector<float> electron_chIso_reldZ_dT;
 
-    vector<float> electron_chIso_dZmu05;
-    vector<float> electron_chIso_dZmu05_dTmu;
+    vector<float> electron_chIso_dZele05;
+    vector<float> electron_chIso_dZele05_dTele;
 
-    vector<float> electron_chIso_dZmu1;
-    vector<float> electron_chIso_dZmu1_dTmu;
+    vector<float> electron_chIso_dZele1;
+    vector<float> electron_chIso_dZele1_dTele;
 
-    vector<float> electron_chIso_dZmu2;
-    vector<float> electron_chIso_dZmu2_dTmu;
+    vector<float> electron_chIso_dZele2;
+    vector<float> electron_chIso_dZele2_dTele;
     /*
     vector<int> passVetoId;
     vector<int> passLooseId;

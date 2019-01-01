@@ -547,7 +547,6 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
             evInfo[iRes].electron_isMatchedToGenJet2.push_back(isMatchedJet2);
             evInfo[iRes].electron_isFromTauDecay.push_back(isFromTauDecay);
             evInfo[iRes].electron_r9.push_back(electron.r9());
-            evInfo[iRes].electron_sigmaIetaIeta.push_back(electron.sigmaIetaIeta());
             evInfo[iRes].electron_chIso_dZ05_simVtx.push_back(chIso_dZ05_simVtx);
             evInfo[iRes].electron_chIso_dZ05_dT_simVtx.push_back(chIso_dZ05_dT_simVtx[iRes]);
 
@@ -898,7 +897,6 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
             evInfo[iRes].electron_isMatchedToGenJet2.push_back(isMatchedJet2);
             evInfo[iRes].electron_isFromTauDecay.push_back(isFromTauDecay);
             evInfo[iRes].electron_r9.push_back(electron.r9());
-            evInfo[iRes].electron_sigmaIetaIeta.push_back(electron.sigmaIetaIeta());
             evInfo[iRes].electron_chIso_dZ05_simVtx.push_back(chIso_dZ05_simVtx);
             evInfo[iRes].electron_chIso_dZ05_dT_simVtx.push_back(chIso_dZ05_dT_simVtx[iRes]);
 
@@ -1428,7 +1426,6 @@ void ElectronIsolationAnalyzer::initEventStructure() {
         evInfo[iRes].electron_isMatchedToGenJet.clear();
         evInfo[iRes].electron_isMatchedToGenJet2.clear();
         evInfo[iRes].electron_r9.clear();
-        evInfo[iRes].electron_sigmaIetaIeta.clear();
         evInfo[iRes].electron_isFromTauDecay.clear();
         /*
         // clear IDs
