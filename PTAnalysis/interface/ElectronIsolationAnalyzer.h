@@ -39,6 +39,7 @@
 #include "DataFormats/TrackReco/interface/TrackFwd.h"
 #include "DataFormats/VertexReco/interface/Vertex.h"
 #include "DataFormats/VertexReco/interface/VertexFwd.h"
+#include "RecoEgamma/EgammaTools/interface/EffectiveAreas.h"
 #include "SimDataFormats/PileupSummaryInfo/interface/PileupSummaryInfo.h"
 #include "SimDataFormats/Vertex/interface/SimVertex.h"
 
@@ -105,7 +106,6 @@ struct eventInfo {
     vector<float> electron_pt;
     vector<float> electron_eta;
     vector<float> electron_phi;
-    vector<float> electron_sigmaIetaIeta;
     vector<float> electron_dz4D;
     vector<float> electron_dxy4D;
     vector<float> electron_dz3D;
@@ -174,6 +174,7 @@ private:
     EDGetTokenT<float>                        genT0Token_;
     EDGetTokenT<vector<PileupSummaryInfo>>    PileUpToken_;
     EDGetTokenT<View<reco::Vertex>>           vertexToken3D_;
+    EDGetTokenT<View<reco::Vertex>>           vertexToken4D_;
     EDGetTokenT<edm::View<reco::PFCandidate>> pfcandToken_;
     EDGetTokenT<View<reco::GenParticle>>      genPartToken_;
     EDGetTokenT<vector<SimVertex>>            genVertexToken_;
@@ -181,6 +182,7 @@ private:
     EDGetTokenT<View<reco::GsfElectron>>      barrelElectronsToken_;
     EDGetTokenT<View<reco::GsfElectron>>      endcapElectronsToken_;
     EDGetTokenT<double>                       RhoToken_;
+    EDGetTokenT<double>                       RhoCaloToken_;
     EffectiveAreas                            effectiveAreas_;
     /*
     // ID decisions objects

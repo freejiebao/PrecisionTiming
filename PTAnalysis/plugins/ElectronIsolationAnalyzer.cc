@@ -33,7 +33,6 @@
 #include "DataFormats/Math/interface/deltaR.h"
 #include <TMath.h>
 #include <TRandom.h>
-
 //
 // class declaration
 //
@@ -212,7 +211,7 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
 
     // -- find the reco vertex closest to the gen vertex (4D)
     mindz = 999999.;
-    for (unsigned int ivtx4D = 0; ivtx4D < vertices4D.size(); ivtx++) {
+    for (unsigned int ivtx = 0; ivtx < vertices4D.size(); ivtx++) {
         const reco::Vertex& vtx = vertices4D[ivtx];
         float               dz  = std::abs(vtx.z() - genPV.position().z());
         if (dz < mindz) {
@@ -324,7 +323,8 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
                 continue;
 
             // -- get the track ref
-            reco::TrackRef trackRef = pfcands.trackRef();
+            auto           pfcandRef = pfcands.refAt(icand);
+            reco::TrackRef trackRef  = pfcandRef->trackRef();
             if (trackRef.isNull())
                 continue;
             if (!trackRef->quality(reco::TrackBase::highPurity))
@@ -364,7 +364,7 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
         // -- expected missing inner hits
         double mHits = electron.gsfTrack()->hitPattern().numberOfLostHits(reco::HitPattern::MISSING_INNER_HITS);
         //pass conversion veto
-        int pass_conversion_veto = ele.passConversionVeto();
+        int pass_conversion_veto = electron.passConversionVeto();
 
         // -- loop over charged pf candidates
         for (unsigned icand = 0; icand < pfcands.size(); ++icand) {
@@ -372,7 +372,8 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
             if (pfcand.charge() == 0)
                 continue;
             // -- get the track ref
-            reco::TrackRef trackRef = pfcands.trackRef();
+            auto           pfcandRef = pfcands.refAt(icand);
+            reco::TrackRef trackRef  = pfcandRef->trackRef();
             if (trackRef.isNull())
                 continue;
             if (!trackRef->quality(reco::TrackBase::highPurity))
@@ -513,7 +514,7 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
                         evInfo[iRes].track_pt.push_back(pfcand.pt());
                         evInfo[iRes].track_eta.push_back(pfcand.eta());
                         evInfo[iRes].track_phi.push_back(pfcand.phi());
-                        evInfo[iRes].track_elecIndex.push_back(eletronIndex);
+                        evInfo[iRes].track_elecIndex.push_back(electronIndex);
                     }
                 }  // end loop over time resolutions
             }
@@ -671,7 +672,8 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
                 continue;
 
             // -- get the track ref
-            reco::TrackRef trackRef = pfcands.trackRef();
+            auto           pfcandRef = pfcands.refAt(icand);
+            reco::TrackRef trackRef  = pfcandRef->trackRef();
             if (trackRef.isNull())
                 continue;
             if (!trackRef->quality(reco::TrackBase::highPurity))
@@ -711,7 +713,7 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
         // -- expected missing inner hits
         double mHits = electron.gsfTrack()->hitPattern().numberOfLostHits(reco::HitPattern::MISSING_INNER_HITS);
         //pass conversion veto
-        int pass_conversion_veto = ele.passConversionVeto();
+        int pass_conversion_veto = electron.passConversionVeto();
 
         // -- loop over charged pf candidates
         for (unsigned icand = 0; icand < pfcands.size(); ++icand) {
@@ -719,7 +721,8 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
             if (pfcand.charge() == 0)
                 continue;
             // -- get the track ref
-            reco::TrackRef trackRef = pfcands.trackRef();
+            auto           pfcandRef = pfcands.refAt(icand);
+            reco::TrackRef trackRef  = pfcandRef->trackRef();
             if (trackRef.isNull())
                 continue;
             if (!trackRef->quality(reco::TrackBase::highPurity))
@@ -862,7 +865,7 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
                         evInfo[iRes].track_pt.push_back(pfcand.pt());
                         evInfo[iRes].track_eta.push_back(pfcand.eta());
                         evInfo[iRes].track_phi.push_back(pfcand.phi());
-                        evInfo[iRes].track_elecIndex.push_back(eletronIndex);
+                        evInfo[iRes].track_elecIndex.push_back(electronIndex);
                     }
                 }  // end loop over time resolutions
             }
