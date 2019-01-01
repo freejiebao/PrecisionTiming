@@ -80,7 +80,9 @@ process.analysis = cms.EDAnalyzer(
     Rho=cms.InputTag("fixedGridRhoFastjetAll"),
     Rho_Calo=cms.InputTag("fixedGridRhoFastjetAllCalo"),
     useVertexClosestToGen = cms.untracked.bool(True),
-    effAreasConfigFile = cms.FileInPath("/RecoEgamma/ElectronIdentification/data/Fall17/effAreaElectrons_cone03_pfNeuHadronsAndPhotons_94X.txt")
+    effAreasConfigFile = cms.FileInPath("/RecoEgamma/ElectronIdentification/data/Fall17/effAreaElectrons_cone03_pfNeuHadronsAndPhotons_94X.txt"),
+    conversionSrc        = cms.InputTag('allConversions'),
+    beamspotSrc = cms.InputTag('offlineBeamSpot')
     #
     # ID decisions (common to all formats)
     #

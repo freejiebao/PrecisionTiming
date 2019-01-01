@@ -59,7 +59,8 @@ ElectronIsolationAnalyzer::ElectronIsolationAnalyzer(const edm::ParameterSet& iC
       endcapElectronsToken_(consumes<View<reco::GsfElectron>>(iConfig.getUntrackedParameter<edm::InputTag>("endcapElectronsTag"))),
       RhoToken_(consumes<double>(iConfig.getParameter<edm::InputTag>("Rho"))),
       RhoCaloToken_(consumes<double>(iConfig.getParameter<edm::InputTag>("Rho_Calo"))),
-      effectiveAreas_((iConfig.getParameter<edm::FileInPath>("effAreasConfigFile")).fullPath()) {
+      effectiveAreas_((iConfig.getParameter<edm::FileInPath>("effAreasConfigFile")).fullPath()),
+      convsToken_(consume<View<reco::Conversion>>(iConfig.getUntrackedParameter<edm::InputTag>("conversionSrc"))), thebsToken_(consume<reco::BeamSpot>(iConfig.getUntrackedParameter<edm::InputTag>("beamspotSrc"))) {
     timeResolutions_       = iConfig.getUntrackedParameter<vector<double>>("timeResolutions");
     isoConeDR_             = iConfig.getUntrackedParameter<double>("isoConeDR");
     saveTracks_            = iConfig.getUntrackedParameter<bool>("saveTracks");
@@ -142,6 +143,15 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
     iEvent.getByToken(RhoCaloToken_, rhoCaloH);
     double rho_calo_ = rhoCaloH.isValid() ? (float)(*rhoCaloH) : 0;
 
+    // -- get conversion collection
+    Handle<View<reco::Conversion>> convsH;
+    iEvent.getByToken(convsToken_, convsH);
+    auto edm::View<reco::allConversions>& convs = *convsH;
+    // -- get beam spot
+    Handle<reco::BeamSpot> thebsH;
+    iEvent.getByToken(thebsToken_, thebsH);
+    auto thebs = *thebsH;
+
     // Get the electron ID data from the event stream.
     // Note: this implies that the VID ID modules have been run upstream.
     // If you need more info, check with the EGM group.
@@ -211,8 +221,8 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
 
     // -- find the reco vertex closest to the gen vertex (4D)
     mindz = 999999.;
-    for (unsigned int ivtx = 0; ivtx < vertices4D.size(); ivtx++) {
-        const reco::Vertex& vtx = vertices4D[ivtx];
+    for (unsigned int ivtx_4D = 0; ivtx_4D < vertices4D.size(); ivtx_4D++) {
+        const reco::Vertex& vtx = vertices4D[ivtx_4D];
         float               dz  = std::abs(vtx.z() - genPV.position().z());
         if (dz < mindz) {
             mindz       = dz;
@@ -364,8 +374,11 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
         // -- expected missing inner hits
         double mHits = electron.gsfTrack()->hitPattern().numberOfLostHits(reco::HitPattern::MISSING_INNER_HITS);
         //pass conversion veto
-        int pass_conversion_veto = electron.passConversionVeto();
-
+        bool pass_conversion_veto;
+        if (thebs.isValid() && convs.isValid())
+            pass_conversion_veto = !ConversionTools::hasMatchedConversion(electron, convs, thebs->position());
+        else
+            pass_conversion_veto = true;
         // -- loop over charged pf candidates
         for (unsigned icand = 0; icand < pfcands.size(); ++icand) {
             const reco::PFCandidate& pfcand = pfcands[icand];
@@ -713,8 +726,11 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
         // -- expected missing inner hits
         double mHits = electron.gsfTrack()->hitPattern().numberOfLostHits(reco::HitPattern::MISSING_INNER_HITS);
         //pass conversion veto
-        int pass_conversion_veto = electron.passConversionVeto();
-
+        bool pass_conversion_veto;
+        if (thebs.isValid() && convs.isValid())
+            pass_conversion_veto = !ConversionTools::hasMatchedConversion(electron, convs, thebs->position());
+        else
+            pass_conversion_veto = true;
         // -- loop over charged pf candidates
         for (unsigned icand = 0; icand < pfcands.size(); ++icand) {
             const reco::PFCandidate& pfcand = pfcands[icand];

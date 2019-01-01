@@ -99,7 +99,7 @@ struct eventInfo {
     vector<double> electron_pf_isolation_calo;
     vector<double> electron_ooEmooP;
     vector<double> electron_mHits;
-    vector<double> electron_pass_conversion_veto;
+    vector<bool>   electron_pass_conversion_veto;
     vector<double> electronsc_eta;
     // -- store the dr between the electron and pfCand, the use it to find the dr of veto cone.
     vector<float> drep;
@@ -184,6 +184,9 @@ private:
     EDGetTokenT<double>                       RhoToken_;
     EDGetTokenT<double>                       RhoCaloToken_;
     EffectiveAreas                            effectiveAreas_;
+    EDGetTokenT<View<reco::Conversion>>       convsToken_;
+    EDGetTokenT<reco::BeamSpot>               thebsToken_;
+
     /*
     // ID decisions objects
     EDGetTokenT<edm::ValueMap<bool>> eleVetoIdMapToken_;
