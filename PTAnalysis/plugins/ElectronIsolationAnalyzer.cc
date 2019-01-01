@@ -336,7 +336,7 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
                 //-- get electron time from pfcand
                 elecTime = pfcand.time();
             }
-            if (isoConeDR_[iCone] == 0.3 && saveTracks_) {
+            if (isoConeDR_ == 0.3 && saveTracks_) {
                 for (unsigned int iRes = 0; iRes < timeResolutions_.size(); iRes++) {
                     evInfo[iRes].drep.push_back(dr);
                 }
@@ -683,7 +683,7 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
                 //-- get electron time from pfcand
                 elecTime = pfcand.time();
             }
-            if (isoConeDR_[iCone] == 0.3 && saveTracks_) {
+            if (isoConeDR_ == 0.3 && saveTracks_) {
                 for (unsigned int iRes = 0; iRes < timeResolutions_.size(); iRes++) {
                     evInfo[iRes].drep.push_back(dr);
                 }
