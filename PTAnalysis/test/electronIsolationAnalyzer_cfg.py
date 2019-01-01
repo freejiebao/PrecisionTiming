@@ -79,6 +79,7 @@ process.analysis = cms.EDAnalyzer(
     minTrackPt = cms.untracked.double(0.0),
     Rho=cms.InputTag("fixedGridRhoFastjetAll"),
     Rho_Calo=cms.InputTag("fixedGridRhoFastjetAllCalo"),
+    useVertexClosestToGen = cms.untracked.bool(True),
     effAreasConfigFile = cms.FileInPath("/RecoEgamma/ElectronIdentification/data/Fall17/effAreaElectrons_cone03_pfNeuHadronsAndPhotons_94X.txt")
     #
     # ID decisions (common to all formats)

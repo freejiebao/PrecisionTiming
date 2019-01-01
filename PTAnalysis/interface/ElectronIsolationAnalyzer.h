@@ -99,6 +99,7 @@ struct eventInfo {
     vector<double> electron_ooEmooP;
     vector<double> electron_mHits;
     vector<double> electron_pass_conversion_veto;
+    vector<double> electronsc_eta;
     // -- store the dr between the electron and pfCand, the use it to find the dr of veto cone.
     vector<float> drep;
     vector<float> electron_pt;

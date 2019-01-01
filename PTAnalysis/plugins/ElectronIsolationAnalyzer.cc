@@ -398,8 +398,6 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
             float dr = deltaR(electron.eta(), electron.phi(), pfcand.eta(), pfcand.phi());
 
             // --- no timing
-
-            // --- no timing
             if (dr > minDr_ && dr < isoConeDR_) {
                 // -- sim vertex
                 if (dzsim < 0.05 && dxysim < 0.02) {
@@ -525,6 +523,7 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
         for (unsigned int iRes = 0; iRes < timeResolutions_.size(); iRes++) {
             evInfo[iRes].electron_pt.push_back(electron.pt());
             evInfo[iRes].electron_eta.push_back(electron.eta());
+            evInfo[iRes].electronsc_eta.push_back(electron.superCluster()->eta());
             evInfo[iRes].electron_phi.push_back(electron.phi());
             // -- info of electron work point
             evInfo[iRes].electron_sigmaIetaIeta.push_back(sigmaIEtaIEta);
@@ -1302,6 +1301,7 @@ void ElectronIsolationAnalyzer::beginJob() {
         eventTree[iRes]->Branch("vtx3D_isFake", &evInfo[iRes].vtx3D_isFake);
         eventTree[iRes]->Branch("electron_pt", &evInfo[iRes].electron_pt);
         eventTree[iRes]->Branch("electron_eta", &evInfo[iRes].electron_eta);
+        eventTree[iRes]->Branch("electronsc_eta", &evInfo[iRes].electronsc_eta);
         eventTree[iRes]->Branch("electron_phi", &evInfo[iRes].electron_phi);
         eventTree[iRes]->Branch("electron_dz3D", &evInfo[iRes].electron_dz3D);
         eventTree[iRes]->Branch("electron_dz4D", &evInfo[iRes].electron_dz4D);
@@ -1404,6 +1404,7 @@ void ElectronIsolationAnalyzer::initEventStructure() {
 
         evInfo[iRes].electron_pt.clear();
         evInfo[iRes].electron_eta.clear();
+        evInfo[iRes].electronsc_eta.clear();
         evInfo[iRes].electron_phi.clear();
 
         // -- info of electron work point
