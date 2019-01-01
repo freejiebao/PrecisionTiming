@@ -1345,14 +1345,14 @@ void ElectronIsolationAnalyzer::beginJob() {
         eventTree[iRes]->Branch(Form("electron_chIso%.2d_reldZ", int(isoConeDR_ * 10)), &evInfo[iRes].electron_chIso_reldZ);
         eventTree[iRes]->Branch(Form("electron_chIso%.2d_reldZ_dT", int(isoConeDR_ * 10)), &evInfo[iRes].electron_chIso_reldZ_dT);
 
-        eventTree[iRes]->Branch(Form("electron_chIso%.2d_dZmu05", int(isoConeDR_ * 10)), &evInfo[iRes].electron_chIso_dZmu05);
-        eventTree[iRes]->Branch(Form("electron_chIso%.2d_dZmu05_dTmu", int(isoConeDR_ * 10)), &evInfo[iRes].electron_chIso_dZmu05_dTmu);
+        eventTree[iRes]->Branch(Form("electron_chIso%.2d_dZele05", int(isoConeDR_ * 10)), &evInfo[iRes].electron_chIso_dZele05);
+        eventTree[iRes]->Branch(Form("electron_chIso%.2d_dZele05_dTele", int(isoConeDR_ * 10)), &evInfo[iRes].electron_chIso_dZele05_dTele);
 
-        eventTree[iRes]->Branch(Form("electron_chIso%.2d_dZmu1", int(isoConeDR_ * 10)), &evInfo[iRes].electron_chIso_dZmu1);
-        eventTree[iRes]->Branch(Form("electron_chIso%.2d_dZmu1_dTmu", int(isoConeDR_ * 10)), &evInfo[iRes].electron_chIso_dZmu1_dTmu);
+        eventTree[iRes]->Branch(Form("electron_chIso%.2d_dZele1", int(isoConeDR_ * 10)), &evInfo[iRes].electron_chIso_dZele1);
+        eventTree[iRes]->Branch(Form("electron_chIso%.2d_dZele1_dTele", int(isoConeDR_ * 10)), &evInfo[iRes].electron_chIso_dZele1_dTele);
 
-        eventTree[iRes]->Branch(Form("electron_chIso%.2d_dZmu2", int(isoConeDR_ * 10)), &evInfo[iRes].electron_chIso_dZmu2);
-        eventTree[iRes]->Branch(Form("electron_chIso%.2d_dZmu2_dTmu", int(isoConeDR_ * 10)), &evInfo[iRes].electron_chIso_dZmu2_dTmu);
+        eventTree[iRes]->Branch(Form("electron_chIso%.2d_dZele2", int(isoConeDR_ * 10)), &evInfo[iRes].electron_chIso_dZele2);
+        eventTree[iRes]->Branch(Form("electron_chIso%.2d_dZele2_dTele", int(isoConeDR_ * 10)), &evInfo[iRes].electron_chIso_dZele2_dTele);
 
         if (saveTracks_) {
             eventTree[iRes]->Branch("track_t", &evInfo[iRes].track_t);
@@ -1548,7 +1548,7 @@ bool isMatchedToGenJet2(const reco::GsfElectron& electron, const edm::View<reco:
     return isMatched;
 }
 
-// --- matching to muons from tau decays
+// --- matching to electrons from tau decays
 bool isFromTau(const reco::GsfElectron& electron, const edm::View<reco::GenParticle>& genParticles) {
 
     bool fromTau = false;
