@@ -71,7 +71,7 @@ process.analysis = cms.EDAnalyzer(
     genVtxTag = cms.untracked.InputTag("g4SimHits", "", "SIM"),
     genJetsTag = cms.untracked.InputTag("ak4GenJets", "", "HLT"),
     timeResolutions = cms.untracked.vdouble(0.030, 0.040, 0.050, 0.060, 0.070),
-    isoConeDR = cms.untracked.vdouble(0.3),
+    isoConeDR = cms.untracked.double(0.3),
     saveTracks = cms.untracked.bool(True),
     maxDz = cms.untracked.double(0.1),
     minDr = cms.untracked.double(0.01),
@@ -81,8 +81,8 @@ process.analysis = cms.EDAnalyzer(
     Rho_Calo=cms.InputTag("fixedGridRhoFastjetAllCalo"),
     useVertexClosestToGen = cms.untracked.bool(True),
     effAreasConfigFile = cms.FileInPath("/RecoEgamma/ElectronIdentification/data/Fall17/effAreaElectrons_cone03_pfNeuHadronsAndPhotons_94X.txt"),
-    conversionSrc        = cms.InputTag('allConversions'),
-    beamspotSrc = cms.InputTag('offlineBeamSpot')
+    conversionSrc        = cms.untracked.InputTag('allConversions'),
+    beamspotSrc = cms.untracked.InputTag('offlineBeamSpot')
     #
     # ID decisions (common to all formats)
     #
