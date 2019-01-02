@@ -189,9 +189,10 @@ private:
     EDGetTokenT<double>                       RhoToken_;
     EDGetTokenT<double>                       RhoCaloToken_;
     EffectiveAreas                            effectiveAreas_;
-    EDGetTokenT<View<reco::Conversion>>       convsToken_;
-    EDGetTokenT<reco::BeamSpot>               thebsToken_;
-
+    //EDGetTokenT<View<reco::Conversion>>       convsToken_;
+    //EDGetTokenT<reco::BeamSpot>               thebsToken_;
+    edm::Handle<reco::ConversionCollection> _convs;
+    edm::Handle<reco::BeamSpot>             _thebs;
     /*
     // ID decisions objects
     EDGetTokenT<edm::ValueMap<bool>> eleVetoIdMapToken_;

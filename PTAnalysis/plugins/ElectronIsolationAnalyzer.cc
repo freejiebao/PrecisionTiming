@@ -57,8 +57,9 @@ ElectronIsolationAnalyzer::ElectronIsolationAnalyzer(const edm::ParameterSet& iC
       endcapElectronsToken_(consumes<View<reco::GsfElectron>>(iConfig.getUntrackedParameter<edm::InputTag>("endcapElectronsTag"))),
       RhoToken_(consumes<double>(iConfig.getParameter<edm::InputTag>("Rho"))),
       RhoCaloToken_(consumes<double>(iConfig.getParameter<edm::InputTag>("Rho_Calo"))),
-      effectiveAreas_((iConfig.getParameter<edm::FileInPath>("effAreasConfigFile")).fullPath()),
-      convsToken_(consumes<View<reco::Conversion>>(iConfig.getUntrackedParameter<edm::InputTag>("conversionSrc"))), thebsToken_(consumes<reco::BeamSpot>(iConfig.getUntrackedParameter<edm::InputTag>("beamspotSrc"))) {
+      effectiveAreas_((iConfig.getParameter<edm::FileInPath>("effAreasConfigFile")).fullPath())
+//convsToken_(consumes<View<reco::Conversion>>(iConfig.getUntrackedParameter<edm::InputTag>("conversionSrc"))), thebsToken_(consumes<reco::BeamSpot>(iConfig.getUntrackedParameter<edm::InputTag>("beamspotSrc")))
+{
     timeResolutions_       = iConfig.getUntrackedParameter<vector<double>>("timeResolutions");
     isoConeDR_             = iConfig.getUntrackedParameter<double>("isoConeDR");
     saveTracks_            = iConfig.getUntrackedParameter<bool>("saveTracks");
@@ -141,12 +142,16 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
     iEvent.getByToken(RhoCaloToken_, rhoCaloH);
     double rho_calo_ = rhoCaloH.isValid() ? (float)(*rhoCaloH) : 0;
 
+    iEvent.getByLabel("allConversions", _convs);
+    iEvent.getByLabel("offlineBeamSpot", _thebs);
+    /*
     // -- get conversion collection
     Handle<reco::ConversionCollection> convsH;
     iEvent.getByToken(convsToken_, convsH);
     // -- get beam spot
     Handle<reco::BeamSpot> thebsH;
-    iEvent.getByToken(thebsToken_, thebsH);
+    iEvent.getByToken(thebsToken_, thebsH);*/
+
     // Get the electron ID data from the event stream.
     // Note: this implies that the VID ID modules have been run upstream.
     // If you need more info, check with the EGM group.
@@ -370,7 +375,9 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
         double mHits = electron.gsfTrack()->hitPattern().numberOfLostHits(reco::HitPattern::MISSING_INNER_HITS);
         //pass conversion veto
         bool pass_conversion_veto = true;
-        pass_conversion_veto      = !(ConversionTools::hasMatchedConversion(electron, convsH, thebsH->position()));
+        if (_thebs.isValid() && _convs.isValid()) {
+            pass_conversion_veto = !(ConversionTools::hasMatchedConversion(electron, _convs, _thebs->position()));
+        }
         // -- loop over charged pf candidates
         for (unsigned icand = 0; icand < pfcands.size(); ++icand) {
             const reco::PFCandidate& pfcand = pfcands[icand];
@@ -719,8 +726,9 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
         double mHits = electron.gsfTrack()->hitPattern().numberOfLostHits(reco::HitPattern::MISSING_INNER_HITS);
         //pass conversion veto
         bool pass_conversion_veto = true;
-        pass_conversion_veto      = !ConversionTools::hasMatchedConversion(electron, convsH, thebsH->position());
-        // -- loop over charged pf candidates
+        if (_thebs.isValid() && _convs.isValid()) {
+            pass_conversion_veto = !(ConversionTools::hasMatchedConversion(electron, _convs, _thebs->position()));
+        }  // -- loop over charged pf candidates
         for (unsigned icand = 0; icand < pfcands.size(); ++icand) {
             const reco::PFCandidate& pfcand = pfcands[icand];
             if (pfcand.charge() == 0)
