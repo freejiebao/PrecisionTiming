@@ -15,7 +15,7 @@ config.section_("Data")
 config.Data.inputDataset = '/DYJetsToLL_M-10to50_TuneCUETP8M1_14TeV-madgraphMLM-pythia8/PhaseIISpr18AODMiniAOD-PU200_93X_upgrade2023_realistic_v5-v1/AODSIM'
 config.Data.inputDBS = 'global'
 config.Data.splitting = 'FileBased'
-config.Data.unitsPerJob = 10
+config.Data.unitsPerJob = 5
 config.Data.totalUnits = -1
 config.Data.publication = False
 config.Data.outputDatasetTag = 'DY_PU200_TuneCUETP8M1'

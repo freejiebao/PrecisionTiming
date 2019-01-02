@@ -15,7 +15,7 @@ config.section_("Data")
 config.Data.inputDataset = '/DYToLL-M-50_0J_14TeV-madgraphMLM-pythia8/PhaseIITDRFall17DR-PU200_93X_upgrade2023_realistic_v2-v1/GEN-SIM-RECO'
 config.Data.inputDBS = 'global'
 config.Data.splitting = 'FileBased'
-config.Data.unitsPerJob = 10
+config.Data.unitsPerJob = 5
 config.Data.totalUnits = -1
 config.Data.publication = False
 config.Data.outputDatasetTag = 'DY_PU200_GEN-SIM-RECO'

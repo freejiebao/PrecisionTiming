@@ -15,7 +15,7 @@ config.section_("Data")
 config.Data.inputDataset = '/QCD_Flat_Pt-15to7000_TuneCUETP8M1_14TeV_pythia8/PhaseIISpr18AODMiniAOD-PU200FEVT_93X_upgrade2023_realistic_v5_ext1-v1/AODSIM'
 config.Data.inputDBS = 'global'
 config.Data.splitting = 'FileBased'
-config.Data.unitsPerJob = 30
+config.Data.unitsPerJob = 5
 config.Data.totalUnits = -1
 config.Data.publication = False
 config.Data.outputDatasetTag = 'QCD_PU200_ext'
