@@ -24,13 +24,11 @@
 #include "FWCore/Framework/interface/EDAnalyzer.h"
 #include "FWCore/Framework/interface/Frameworkfwd.h"
 
+#include "DataFormats/Math/interface/deltaR.h"
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/Framework/interface/MakerMacros.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
-
 #include "PrecisionTiming/PTAnalysis/interface/ElectronIsolationAnalyzer.h"
-
-#include "DataFormats/Math/interface/deltaR.h"
 #include <TMath.h>
 #include <TRandom.h>
 //
@@ -60,7 +58,7 @@ ElectronIsolationAnalyzer::ElectronIsolationAnalyzer(const edm::ParameterSet& iC
       RhoToken_(consumes<double>(iConfig.getParameter<edm::InputTag>("Rho"))),
       RhoCaloToken_(consumes<double>(iConfig.getParameter<edm::InputTag>("Rho_Calo"))),
       effectiveAreas_((iConfig.getParameter<edm::FileInPath>("effAreasConfigFile")).fullPath()),
-      convsToken_(consume<View<reco::Conversion>>(iConfig.getUntrackedParameter<edm::InputTag>("conversionSrc"))), thebsToken_(consume<reco::BeamSpot>(iConfig.getUntrackedParameter<edm::InputTag>("beamspotSrc"))) {
+      convsToken_(consumes<View<reco::Conversion>>(iConfig.getUntrackedParameter<edm::InputTag>("conversionSrc"))), thebsToken_(consumes<reco::BeamSpot>(iConfig.getUntrackedParameter<edm::InputTag>("beamspotSrc"))) {
     timeResolutions_       = iConfig.getUntrackedParameter<vector<double>>("timeResolutions");
     isoConeDR_             = iConfig.getUntrackedParameter<double>("isoConeDR");
     saveTracks_            = iConfig.getUntrackedParameter<bool>("saveTracks");
@@ -144,14 +142,11 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
     double rho_calo_ = rhoCaloH.isValid() ? (float)(*rhoCaloH) : 0;
 
     // -- get conversion collection
-    Handle<View<reco::Conversion>> convsH;
+    Handle<reco::ConversionCollection> convsH;
     iEvent.getByToken(convsToken_, convsH);
-    auto edm::View<reco::allConversions>& convs = *convsH;
     // -- get beam spot
     Handle<reco::BeamSpot> thebsH;
     iEvent.getByToken(thebsToken_, thebsH);
-    auto thebs = *thebsH;
-
     // Get the electron ID data from the event stream.
     // Note: this implies that the VID ID modules have been run upstream.
     // If you need more info, check with the EGM group.
@@ -324,10 +319,10 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
         }
 
         // -- firstly, get the electron time
-        float        elecTime = 0.;  // record time of electron
-        unsigned int icandTag = -1;
-        float        dr_      = 99999999.;
-        for (unsigned icand = 0; icand < pfcands.size(); ++icand) {
+        float elecTime = 0.;  // record time of electron
+        //int   icandTag = -1;
+        float dr_ = 99999999.;
+        for (int icand = 0; icand < (int)pfcands.size(); ++icand) {
             const reco::PFCandidate& pfcand = pfcands[icand];
             if (pfcand.charge() == 0)
                 continue;
@@ -341,8 +336,8 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
                 continue;
             float dr = deltaR(electron.eta(), electron.phi(), pfcand.eta(), pfcand.phi());
             if (dr < dr_) {
-                dr_      = dr;
-                icandTag = icand;
+                dr_ = dr;
+                //icandTag = icand;
                 //-- get electron time from pfcand
                 elecTime = pfcand.time();
             }
@@ -366,7 +361,7 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
         double hoe       = electron.hadronicOverEm();
         double energy_sc = electron.superCluster()->energy();
         // -- relIsoWithEA
-        float eA                = effectiveAreas_.getEffectiveArea(fabs(electron.superCluster()->eta()));
+        float eA                = effectiveAreas_.EffectiveAreas::getEffectiveArea(fabs(electron.superCluster()->eta()));
         float pf_isolation      = ((electron.pfIsolationVariables().sumChargedHadronPt + std::max(0., electron.pfIsolationVariables().sumNeutralHadronEt + electron.pfIsolationVariables().sumPhotonEt - eA * rho_)) / electron.pt());
         float pf_isolation_calo = ((electron.pfIsolationVariables().sumChargedHadronPt + std::max(0., electron.pfIsolationVariables().sumNeutralHadronEt + electron.pfIsolationVariables().sumPhotonEt - eA * rho_calo_)) / electron.pt());
         // --  EleEInverseMinusPInverseCut
@@ -374,11 +369,8 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
         // -- expected missing inner hits
         double mHits = electron.gsfTrack()->hitPattern().numberOfLostHits(reco::HitPattern::MISSING_INNER_HITS);
         //pass conversion veto
-        bool pass_conversion_veto;
-        if (thebs.isValid() && convs.isValid())
-            pass_conversion_veto = !ConversionTools::hasMatchedConversion(electron, convs, thebs->position());
-        else
-            pass_conversion_veto = true;
+        bool pass_conversion_veto = true;
+        pass_conversion_veto      = !(ConversionTools::hasMatchedConversion(electron, convsH, thebsH->position()));
         // -- loop over charged pf candidates
         for (unsigned icand = 0; icand < pfcands.size(); ++icand) {
             const reco::PFCandidate& pfcand = pfcands[icand];
@@ -676,10 +668,10 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
         }
 
         // -- firstly, get the electron time
-        float        elecTime = 0.;  // record time of electron
-        unsigned int icandTag = -1;
-        float        dr_      = 99999999.;
-        for (unsigned icand = 0; icand < pfcands.size(); ++icand) {
+        float elecTime = 0.;  // record time of electron
+        //int   icandTag = -1;
+        float dr_ = 99999999.;
+        for (int icand = 0; icand < (int)pfcands.size(); ++icand) {
             const reco::PFCandidate& pfcand = pfcands[icand];
             if (pfcand.charge() == 0)
                 continue;
@@ -693,8 +685,8 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
                 continue;
             float dr = deltaR(electron.eta(), electron.phi(), pfcand.eta(), pfcand.phi());
             if (dr < dr_) {
-                dr_      = dr;
-                icandTag = icand;
+                dr_ = dr;
+                //icandTag = icand;
                 //-- get electron time from pfcand
                 elecTime = pfcand.time();
             }
@@ -718,7 +710,7 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
         double hoe       = electron.hadronicOverEm();
         double energy_sc = electron.superCluster()->energy();
         // -- relIsoWithEA
-        float eA                = effectiveAreas_.getEffectiveArea(fabs(electron.superCluster()->eta()));
+        float eA                = effectiveAreas_.EffectiveAreas::getEffectiveArea(fabs(electron.superCluster()->eta()));
         float pf_isolation      = ((electron.pfIsolationVariables().sumChargedHadronPt + std::max(0., electron.pfIsolationVariables().sumNeutralHadronEt + electron.pfIsolationVariables().sumPhotonEt - eA * rho_)) / electron.pt());
         float pf_isolation_calo = ((electron.pfIsolationVariables().sumChargedHadronPt + std::max(0., electron.pfIsolationVariables().sumNeutralHadronEt + electron.pfIsolationVariables().sumPhotonEt - eA * rho_calo_)) / electron.pt());
         // --  EleEInverseMinusPInverseCut
@@ -726,11 +718,8 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
         // -- expected missing inner hits
         double mHits = electron.gsfTrack()->hitPattern().numberOfLostHits(reco::HitPattern::MISSING_INNER_HITS);
         //pass conversion veto
-        bool pass_conversion_veto;
-        if (thebs.isValid() && convs.isValid())
-            pass_conversion_veto = !ConversionTools::hasMatchedConversion(electron, convs, thebs->position());
-        else
-            pass_conversion_veto = true;
+        bool pass_conversion_veto = true;
+        pass_conversion_veto      = !ConversionTools::hasMatchedConversion(electron, convsH, thebsH->position());
         // -- loop over charged pf candidates
         for (unsigned icand = 0; icand < pfcands.size(); ++icand) {
             const reco::PFCandidate& pfcand = pfcands[icand];
@@ -1020,7 +1009,6 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
 
         // -- firstly, get the electron time
         float        elecTime = 0.;  // record time of electron
-        unsigned int icandTag = -1;
         float        dr_      = 99999999.;
         for (unsigned icand = 0; icand < pfcands.size(); ++icand) {
             const reco::PFCandidate& pfcand = pfcands[icand];

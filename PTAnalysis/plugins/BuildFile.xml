@@ -24,4 +24,6 @@
 <use name="PhysicsTools/UtilAlgos"/>
 <use name="SimDataFormats/TrackingHit"/>
 <use name="DataFormats/ForwardDetId"/>
+<use name="DataFormats/EgammaCandidates"/>
+<use name="RecoEgamma/EgammaTools"/>
 <flags EDM_PLUGIN="1"/>
