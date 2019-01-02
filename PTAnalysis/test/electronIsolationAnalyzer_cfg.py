@@ -23,16 +23,16 @@ inputFilesGenSimReco = cms.untracked.vstring(
 # Set up input/output depending on the format
 # You can list here either AOD or miniAOD files, but not both types mixed
 #
-#useAOD = False
+useAOD = False
 
-#if useAOD == True :
-#    inputFiles = inputFilesAOD
-#    outputFile = "electronIsolation.root"
-#    print("AOD input files are used")
-#else :
-#    inputFiles = inputFilesGenSimReco #inputFiles = inputFilesMiniAOD
-#    outputFile = "electronIsolation_GEN-SIM-RECO.root" #outputFile = "electronIsolationminiAOD.root"
-#    print("GEN-SIM-RECO input files are used")
+if useAOD == True :
+    inputFiles = inputFilesAOD
+    outputFile = "electronIsolation.root"
+    print("AOD input files are used")
+else :
+    inputFiles = inputFilesGenSimReco #inputFiles = inputFilesMiniAOD
+    outputFile = "electronIsolation_GEN-SIM-RECO.root" #outputFile = "electronIsolationminiAOD.root"
+    print("GEN-SIM-RECO input files are used")
 process.source = cms.Source ("PoolSource", fileNames = inputFiles )
 
 #
