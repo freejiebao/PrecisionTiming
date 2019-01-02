@@ -23,3 +23,11 @@ crab submit -c ./crab/crab3_analysis_DY_noPU_GEN-SIM-RECO_v1.py
 crab submit -c ./crab/crab3_analysis_QCD_PU200_GEN-SIM-RECO_v1.py
 crab submit -c ./crab/crab3_analysis_QCD_PU200_GEN-SIM-RECO_v1_ext.py
 crab submit -c ./crab/crab3_analysis_QCD_noPU_GEN-SIM-RECO_v1.py
+crab submit -c ./crab/crab3_analysis_DY_1J_PU200_GEN-SIM-RECO_v1.py
+crab submit -c ./crab/crab3_analysis_DY_1J_PU200_GEN-SIM-RECO_v1_ext.py
+crab submit -c ./crab/crab3_analysis_DY_1J_noPU_GEN-SIM-RECO_v1.py
+crab submit -c ./crab/crab3_analysis_DY_2J_PU200_GEN-SIM-RECO_v1.py
+crab submit -c ./crab/crab3_analysis_DY_2J_PU200_GEN-SIM-RECO_v1_ext.py
+crab submit -c ./crab/crab3_analysis_DY_2J_noPU_GEN-SIM-RECO_v1.py
+crab submit -c ./crab/crab3_analysis_DY_3J_PU200_GEN-SIM-RECO_v1.py
+crab submit -c ./crab/crab3_analysis_DY_3J_noPU_GEN-SIM-RECO_v1.py
