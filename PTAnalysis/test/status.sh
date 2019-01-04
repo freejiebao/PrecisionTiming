@@ -19,7 +19,7 @@ crab status -d crab_QCD_PU200_ext
 crab status -d crab_QCD_PU200
 crab status -d crab_DY_PU200_GEN-SIM-RECO_ext
 crab status -d crab_DY_PU200_GEN-SIM-RECO
-crab status -d crab_DY_noPU_GEN-SIM-RECO
+
 crab status -d crab_QCD_PU200_GEN-SIM-RECO_ext
 crab status -d crab_QCD_PU200_GEN-SIM-RECO
 crab status -d crab_QCD_noPU_GEN-SIM-RECO
@@ -31,3 +31,10 @@ crab status -d crab_DY_2J_PU200_GEN-SIM-RECO_ext
 crab status -d crab_DY_2J_noPU_GEN-SIM-RECO
 crab status -d crab_DY_3J_PU200_GEN-SIM-RECO
 crab status -d crab_DY_3J_noPU_GEN-SIM-RECO
+crab status -d crab_DY_PU200_GEN-SIM-RECO_ext
+
+can be used:
+
+crab status -d crab_QCD_PU200_GEN-SIM-RECO_ext
+crab status -d crab_DY_noPU_GEN-SIM-RECO
+crab status -d crab_DY_PU200_GEN-SIM-RECO
