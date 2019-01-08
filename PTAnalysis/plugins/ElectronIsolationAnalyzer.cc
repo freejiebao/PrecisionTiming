@@ -56,7 +56,7 @@ ElectronIsolationAnalyzer::ElectronIsolationAnalyzer(const edm::ParameterSet& iC
       barrelElectronsToken_(consumes<View<reco::GsfElectron>>(iConfig.getUntrackedParameter<edm::InputTag>("barrelElectronsTag"))),
       endcapElectronsToken_(consumes<View<reco::GsfElectron>>(iConfig.getUntrackedParameter<edm::InputTag>("endcapElectronsTag"))),
       RhoToken_(consumes<double>(iConfig.getParameter<edm::InputTag>("Rho"))),
-      RhoCaloToken_(consumes<double>(iConfig.getParameter<edm::InputTag>("Rho_Calo"))),
+      //RhoCaloToken_(consumes<double>(iConfig.getParameter<edm::InputTag>("Rho_Calo"))),
       effectiveAreas_((iConfig.getParameter<edm::FileInPath>("effAreasConfigFile")).fullPath())
 //convsToken_(consumes<View<reco::Conversion>>(iConfig.getUntrackedParameter<edm::InputTag>("conversionSrc"))), thebsToken_(consumes<reco::BeamSpot>(iConfig.getUntrackedParameter<edm::InputTag>("beamspotSrc")))
 {
@@ -138,9 +138,9 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
     double rho_ = rhoH.isValid() ? (float)(*rhoH) : 0;
 
     // -- get the rho_calo Value
-    Handle<double> rhoCaloH;
+    /*Handle<double> rhoCaloH;
     iEvent.getByToken(RhoCaloToken_, rhoCaloH);
-    double rho_calo_ = rhoCaloH.isValid() ? (float)(*rhoCaloH) : 0;
+    double rho_calo_ = rhoCaloH.isValid() ? (float)(*rhoCaloH) : 0;*/
 
     iEvent.getByLabel("allConversions", _convs);
     iEvent.getByLabel("offlineBeamSpot", _thebs);
@@ -248,18 +248,19 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
         const reco::GsfElectron& electron = barrelElectrons[iele];
 
         // -- minimal checks
-        if (electron.pt() < 10.)
+        if (electron.pt() < 5.)
             continue;
         if (electron.gsfTrack().isNull())
             continue;
-        //if (fabs(electron.eta()) > 1.5)
+        //if (fabs(electron.superCluster()->eta()) > 1.479)
         //    continue;
         electronIndex++;
         // -- check if prompt or fake electron
-        bool isPromptEle    = isPromptElectron(electron, genParticles);
-        bool isMatchedJet   = isMatchedToGenJet(electron, genJets);
-        bool isMatchedJet2  = isMatchedToGenJet2(electron, genJets);
-        bool isFromTauDecay = isFromTau(electron, genParticles);
+        bool      isPromptEle    = isPromptElectron(electron, genParticles);
+        bool      isMatchedJet   = isMatchedToGenJet(electron, genJets);
+        bool      isMatchedJet2  = isMatchedToGenJet2(electron, genJets);
+        bool      isFromTauDecay = isFromTau(electron, genParticles);
+        bitset<8> looseid;
         // -- Look up and save the ID decisions
         /*float sieieCut          = 0.0112;
         float dEtaSeedCut       = 0.00377;
@@ -346,11 +347,11 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
                 //-- get electron time from pfcand
                 elecTime = pfcand.time();
             }
-            if (isoConeDR_ == 0.3 && saveTracks_) {
+            /*if (isoConeDR_ == 0.3 && saveTracks_) {
                 for (unsigned int iRes = 0; iRes < timeResolutions_.size(); iRes++) {
                     evInfo[iRes].drep.push_back(dr);
                 }
-            }
+            }*/
         }
         // -- firstly, get the electron time
 
@@ -366,18 +367,44 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
         double hoe       = electron.hadronicOverEm();
         double energy_sc = electron.superCluster()->energy();
         // -- relIsoWithEA
-        float eA                = effectiveAreas_.EffectiveAreas::getEffectiveArea(fabs(electron.superCluster()->eta()));
-        float pf_isolation      = ((electron.pfIsolationVariables().sumChargedHadronPt + std::max(0., electron.pfIsolationVariables().sumNeutralHadronEt + electron.pfIsolationVariables().sumPhotonEt - eA * rho_)) / electron.pt());
-        float pf_isolation_calo = ((electron.pfIsolationVariables().sumChargedHadronPt + std::max(0., electron.pfIsolationVariables().sumNeutralHadronEt + electron.pfIsolationVariables().sumPhotonEt - eA * rho_calo_)) / electron.pt());
+        float eA           = effectiveAreas_.EffectiveAreas::getEffectiveArea(fabs(electron.superCluster()->eta()));
+        float pf_isolation = ((electron.pfIsolationVariables().sumChargedHadronPt + std::max(0., electron.pfIsolationVariables().sumNeutralHadronEt + electron.pfIsolationVariables().sumPhotonEt - eA * rho_)) / electron.pt());
+        /*float pf_isolation_calo = ((electron.pfIsolationVariables().sumChargedHadronPt + std::max(0., electron.pfIsolationVariables().sumNeutralHadronEt + electron.pfIsolationVariables().sumPhotonEt - eA * rho_calo_)) / electron.pt());*/
         // --  EleEInverseMinusPInverseCut
-        double ooEmooP = fabs((1.0 / electron.ecalEnergy() - electron.eSuperClusterOverP() / electron.ecalEnergy()));
+        double ooEmooP = fabs((1.0 - electron.eSuperClusterOverP()) / electron.ecalEnergy());
         // -- expected missing inner hits
-        double mHits = electron.gsfTrack()->hitPattern().numberOfLostHits(reco::HitPattern::MISSING_INNER_HITS);
+        unsigned mHits = electron.gsfTrack()->hitPattern().numberOfLostHits(reco::HitPattern::MISSING_INNER_HITS);
         //pass conversion veto
         bool pass_conversion_veto = true;
         if (_thebs.isValid() && _convs.isValid()) {
             pass_conversion_veto = !(ConversionTools::hasMatchedConversion(electron, _convs, _thebs->position()));
         }
+
+        if (sigmaIEtaIEta < 0.0112) {
+            looseid[7] = 1;
+        }
+        if (dEtaInSeed < 0.00377) {
+            looseid[6] = 1;
+        }
+        if (dPhiIn < 0.0884) {
+            looseid[5] = 1;
+        }
+        if (hoe < 0.05 + 1.16 / energy_sc + 0.0324 * rho_ / energy_sc) {
+            looseid[4] = 1;
+        }
+        if (pf_isolation < 0.112 + 0.506 / electron.pt()) {
+            looseid[3] = 1;
+        }
+        if (ooEmooP < 0.193) {
+            looseid[2] = 1;
+        }
+        if (mHits <= 1) {
+            looseid[1] = 1;
+        }
+        if (pass_conversion_veto) {
+            looseid[0] = 1;
+        }
+        std::string looseid_string = looseid.to_string<char, std::string::traits_type, std::string::allocator_type>();
         // -- loop over charged pf candidates
         for (unsigned icand = 0; icand < pfcands.size(); ++icand) {
             const reco::PFCandidate& pfcand = pfcands[icand];
@@ -539,7 +566,8 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
             evInfo[iRes].electronsc_eta.push_back(electron.superCluster()->eta());
             evInfo[iRes].electron_phi.push_back(electron.phi());
             // -- info of electron work point
-            evInfo[iRes].electron_sigmaIetaIeta.push_back(sigmaIEtaIEta);
+            evInfo[iRes].electron_looseid.push_back(looseid_string);
+            /*evInfo[iRes].electron_sigmaIetaIeta.push_back(sigmaIEtaIEta);
             evInfo[iRes].electron_dEtaInSeed.push_back(dEtaInSeed);
             evInfo[iRes].electron_dPhiIn.push_back(dPhiIn);
             evInfo[iRes].electron_hoe.push_back(hoe);
@@ -548,7 +576,7 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
             evInfo[iRes].electron_pf_isolation_calo.push_back(pf_isolation_calo);
             evInfo[iRes].electron_ooEmooP.push_back(ooEmooP);
             evInfo[iRes].electron_mHits.push_back(mHits);
-            evInfo[iRes].electron_pass_conversion_veto.push_back(pass_conversion_veto);
+            evInfo[iRes].electron_pass_conversion_veto.push_back(pass_conversion_veto);*/
 
             evInfo[iRes].electron_dz4D.push_back(electron.gsfTrack()->dz(vtx4D.position()));
             evInfo[iRes].electron_dxy4D.push_back(electron.gsfTrack()->dxy(vtx4D.position()));
@@ -599,18 +627,19 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
         const reco::GsfElectron& electron = endcapElectrons[iele];
 
         // -- minimal checks
-        if (electron.pt() < 10.)
+        if (electron.pt() < 5.)
             continue;
         if (electron.gsfTrack().isNull())
             continue;
-        //if (fabs(electron.eta()) > 1.5)
-        //    continue;
+        if (!(electron.superCluster()->eta() > 1.479 && electron.superCluster()->eta() < 2.5))
+            continue;
         electronIndex++;
         // -- check if prompt or fake electron
-        bool isPromptEle    = isPromptElectron(electron, genParticles);
-        bool isMatchedJet   = isMatchedToGenJet(electron, genJets);
-        bool isMatchedJet2  = isMatchedToGenJet2(electron, genJets);
-        bool isFromTauDecay = isFromTau(electron, genParticles);
+        bool      isPromptEle    = isPromptElectron(electron, genParticles);
+        bool      isMatchedJet   = isMatchedToGenJet(electron, genJets);
+        bool      isMatchedJet2  = isMatchedToGenJet2(electron, genJets);
+        bool      isFromTauDecay = isFromTau(electron, genParticles);
+        bitset<8> looseid;
         // -- Look up and save the ID decisions
         /*float sieieCut          = 0.0112;
         float dEtaSeedCut       = 0.00377;
@@ -697,11 +726,11 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
                 //-- get electron time from pfcand
                 elecTime = pfcand.time();
             }
-            if (isoConeDR_ == 0.3 && saveTracks_) {
+            /*if (isoConeDR_ == 0.3 && saveTracks_) {
                 for (unsigned int iRes = 0; iRes < timeResolutions_.size(); iRes++) {
                     evInfo[iRes].drep.push_back(dr);
                 }
-            }
+            }*/
         }
         // -- firstly, get the electron time
 
@@ -717,18 +746,45 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
         double hoe       = electron.hadronicOverEm();
         double energy_sc = electron.superCluster()->energy();
         // -- relIsoWithEA
-        float eA                = effectiveAreas_.EffectiveAreas::getEffectiveArea(fabs(electron.superCluster()->eta()));
-        float pf_isolation      = ((electron.pfIsolationVariables().sumChargedHadronPt + std::max(0., electron.pfIsolationVariables().sumNeutralHadronEt + electron.pfIsolationVariables().sumPhotonEt - eA * rho_)) / electron.pt());
-        float pf_isolation_calo = ((electron.pfIsolationVariables().sumChargedHadronPt + std::max(0., electron.pfIsolationVariables().sumNeutralHadronEt + electron.pfIsolationVariables().sumPhotonEt - eA * rho_calo_)) / electron.pt());
+        float eA           = effectiveAreas_.EffectiveAreas::getEffectiveArea(fabs(electron.superCluster()->eta()));
+        float pf_isolation = ((electron.pfIsolationVariables().sumChargedHadronPt + std::max(0., electron.pfIsolationVariables().sumNeutralHadronEt + electron.pfIsolationVariables().sumPhotonEt - eA * rho_)) / electron.pt());
+        /*float pf_isolation_calo = ((electron.pfIsolationVariables().sumChargedHadronPt + std::max(0., electron.pfIsolationVariables().sumNeutralHadronEt + electron.pfIsolationVariables().sumPhotonEt - eA * rho_calo_)) / electron.pt());*/
         // --  EleEInverseMinusPInverseCut
-        double ooEmooP = fabs((1.0 / electron.ecalEnergy() - electron.eSuperClusterOverP() / electron.ecalEnergy()));
+        double ooEmooP = fabs((1.0 - electron.eSuperClusterOverP()) / electron.ecalEnergy());
         // -- expected missing inner hits
-        double mHits = electron.gsfTrack()->hitPattern().numberOfLostHits(reco::HitPattern::MISSING_INNER_HITS);
+        unsigned mHits = electron.gsfTrack()->hitPattern().numberOfLostHits(reco::HitPattern::MISSING_INNER_HITS);
         //pass conversion veto
         bool pass_conversion_veto = true;
         if (_thebs.isValid() && _convs.isValid()) {
             pass_conversion_veto = !(ConversionTools::hasMatchedConversion(electron, _convs, _thebs->position()));
-        }  // -- loop over charged pf candidates
+        }
+
+        if (sigmaIEtaIEta < 0.0425) {
+            looseid[7] = 1;
+        }
+        if (dEtaInSeed < 0.00674) {
+            looseid[6] = 1;
+        }
+        if (dPhiIn < 0.169) {
+            looseid[5] = 1;
+        }
+        if (hoe < 0.0441 + 2.54 / energy_sc + 0.183 * rho_ / energy_sc) {
+            looseid[4] = 1;
+        }
+        if (pf_isolation < 0.108 + 0.963 / electron.pt()) {
+            looseid[3] = 1;
+        }
+        if (ooEmooP < 0.111) {
+            looseid[2] = 1;
+        }
+        if (mHits <= 1) {
+            looseid[1] = 1;
+        }
+        if (pass_conversion_veto) {
+            looseid[0] = 1;
+        }
+        std::string looseid_string = looseid.to_string<char, std::string::traits_type, std::string::allocator_type>();
+        // -- loop over charged pf candidates
         for (unsigned icand = 0; icand < pfcands.size(); ++icand) {
             const reco::PFCandidate& pfcand = pfcands[icand];
             if (pfcand.charge() == 0)
@@ -892,7 +948,8 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
             evInfo[iRes].electronsc_eta.push_back(electron.superCluster()->eta());
             evInfo[iRes].electron_phi.push_back(electron.phi());
             // -- info of electron work point
-            evInfo[iRes].electron_sigmaIetaIeta.push_back(sigmaIEtaIEta);
+            evInfo[iRes].electron_looseid.push_back(looseid_string);
+            /*evInfo[iRes].electron_sigmaIetaIeta.push_back(sigmaIEtaIEta);
             evInfo[iRes].electron_dEtaInSeed.push_back(dEtaInSeed);
             evInfo[iRes].electron_dPhiIn.push_back(dPhiIn);
             evInfo[iRes].electron_hoe.push_back(hoe);
@@ -901,7 +958,7 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
             evInfo[iRes].electron_pf_isolation_calo.push_back(pf_isolation_calo);
             evInfo[iRes].electron_ooEmooP.push_back(ooEmooP);
             evInfo[iRes].electron_mHits.push_back(mHits);
-            evInfo[iRes].electron_pass_conversion_veto.push_back(pass_conversion_veto);
+            evInfo[iRes].electron_pass_conversion_veto.push_back(pass_conversion_veto);*/
 
             evInfo[iRes].electron_dz4D.push_back(electron.gsfTrack()->dz(vtx4D.position()));
             evInfo[iRes].electron_dxy4D.push_back(electron.gsfTrack()->dxy(vtx4D.position()));
@@ -957,8 +1014,8 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
         evInfo[iRes].vtxGen_t     = genPV.position().t();
         evInfo[iRes].vtx4D_isFake = vtx4D.isFake();
         evInfo[iRes].vtx3D_isFake = vtx3D.isFake();
-        evInfo[iRes].rho          = rho_;
-        evInfo[iRes].rho_calo     = rho_calo_;
+        //evInfo[iRes].rho          = rho_;
+        //evInfo[iRes].rho_calo     = rho_calo_;
     }
 
     // --- fill the tree
@@ -1299,7 +1356,7 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
 // ------------ method called once each job just before starting event loop  ------------
 void ElectronIsolationAnalyzer::beginJob() {
     for (unsigned int iRes = 0; iRes < timeResolutions_.size(); iRes++) {
-        eventTree[iRes]->Branch("drep", &evInfo[iRes].drep);  // add for veto dr
+        //eventTree[iRes]->Branch("drep", &evInfo[iRes].drep);  // add for veto dr
 
         eventTree[iRes]->Branch("npu", &evInfo[iRes].npu);
         eventTree[iRes]->Branch("vtxGen_z", &evInfo[iRes].vtxGen_z);
@@ -1324,9 +1381,9 @@ void ElectronIsolationAnalyzer::beginJob() {
         eventTree[iRes]->Branch("electron_isPrompt", &evInfo[iRes].electron_isPrompt);
         eventTree[iRes]->Branch("electron_isMatchedToGenJet", &evInfo[iRes].electron_isMatchedToGenJet);
         eventTree[iRes]->Branch("electron_isFromTauDecay", &evInfo[iRes].electron_isFromTauDecay);
-
+        eventTree[iRes]->Branch("electron_looseid", &evInfo[iRes].electron_looseid);
         // -- info of electron work point
-        eventTree[iRes]->Branch("rho", &evInfo[iRes].rho);
+        /*eventTree[iRes]->Branch("rho", &evInfo[iRes].rho);
         eventTree[iRes]->Branch("rho_calo", &evInfo[iRes].rho_calo);
         eventTree[iRes]->Branch("electron_sigmaIetaIeta", &evInfo[iRes].electron_sigmaIetaIeta);
         eventTree[iRes]->Branch("electron_dEtaInSeed", &evInfo[iRes].electron_dEtaInSeed);
@@ -1337,7 +1394,7 @@ void ElectronIsolationAnalyzer::beginJob() {
         eventTree[iRes]->Branch("electron_pf_isolation_calo", &evInfo[iRes].electron_pf_isolation_calo);
         eventTree[iRes]->Branch("electron_ooEmooP", &evInfo[iRes].electron_ooEmooP);
         eventTree[iRes]->Branch("electron_mHits", &evInfo[iRes].electron_mHits);
-        eventTree[iRes]->Branch("electron_pass_conversion_veto", &evInfo[iRes].electron_pass_conversion_veto);
+        eventTree[iRes]->Branch("electron_pass_conversion_veto", &evInfo[iRes].electron_pass_conversion_veto);*/
 
         eventTree[iRes]->Branch(Form("electron_chIso%.2d_dZ05_simVtx", int(isoConeDR_ * 10)), &evInfo[iRes].electron_chIso_dZ05_simVtx);
         eventTree[iRes]->Branch(Form("electron_chIso%.2d_dZ05_dT_simVtx", int(isoConeDR_ * 10)), &evInfo[iRes].electron_chIso_dZ05_dT_simVtx);
@@ -1400,7 +1457,7 @@ void ElectronIsolationAnalyzer::fillDescriptions(edm::ConfigurationDescriptions&
 void ElectronIsolationAnalyzer::initEventStructure() {
     // per-event trees:
     for (unsigned int iRes = 0; iRes < timeResolutions_.size(); iRes++) {
-        evInfo[iRes].drep.clear();
+        //evInfo[iRes].drep.clear();
         evInfo[iRes].npu          = -1;
         evInfo[iRes].vtxGen_t     = -999;
         evInfo[iRes].vtxGen_z     = -999;
@@ -1412,16 +1469,16 @@ void ElectronIsolationAnalyzer::initEventStructure() {
         evInfo[iRes].vtx3D_zErr   = -999;
         evInfo[iRes].vtx4D_isFake = -999;
         evInfo[iRes].vtx3D_isFake = -999;
-        evInfo[iRes].rho          = -999;
-        evInfo[iRes].rho_calo     = -999;
+        //evInfo[iRes].rho          = -999;
+        //evInfo[iRes].rho_calo     = -999;
 
         evInfo[iRes].electron_pt.clear();
         evInfo[iRes].electron_eta.clear();
         evInfo[iRes].electronsc_eta.clear();
         evInfo[iRes].electron_phi.clear();
-
         // -- info of electron work point
-        evInfo[iRes].electron_sigmaIetaIeta.clear();
+        evInfo[iRes].electron_looseid.clear();
+        /*evInfo[iRes].electron_sigmaIetaIeta.clear();
         evInfo[iRes].electron_dEtaInSeed.clear();
         evInfo[iRes].electron_dPhiIn.clear();
         evInfo[iRes].electron_hoe.clear();
@@ -1430,7 +1487,7 @@ void ElectronIsolationAnalyzer::initEventStructure() {
         evInfo[iRes].electron_pf_isolation_calo.clear();
         evInfo[iRes].electron_ooEmooP.clear();
         evInfo[iRes].electron_mHits.clear();
-        evInfo[iRes].electron_pass_conversion_veto.clear();
+        evInfo[iRes].electron_pass_conversion_veto.clear();*/
 
         evInfo[iRes].electron_dz3D.clear();
         evInfo[iRes].electron_dxy3D.clear();

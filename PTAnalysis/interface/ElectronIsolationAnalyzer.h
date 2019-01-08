@@ -17,8 +17,9 @@
 //
 
 // system include files
+#include <bitset>
 #include <memory>
-
+#include <string>
 // user include files
 #include "CommonTools/UtilAlgos/interface/TFileService.h"
 #include "FWCore/Framework/interface/Event.h"
@@ -82,20 +83,21 @@ struct eventInfo {
     vector<float> track_t;
     vector<int>   track_elecIndex;
 
-    float  vtxGen_z;
-    float  vtxGen_t;
-    float  vtx4D_z;
-    float  vtx4D_zErr;
-    float  vtx4D_t;
-    float  vtx4D_tErr;
-    float  vtx3D_z;
-    float  vtx3D_zErr;
-    int    vtx4D_isFake;
-    int    vtx3D_isFake;
-    double rho;
-    double rho_calo;
+    float vtxGen_z;
+    float vtxGen_t;
+    float vtx4D_z;
+    float vtx4D_zErr;
+    float vtx4D_t;
+    float vtx4D_tErr;
+    float vtx3D_z;
+    float vtx3D_zErr;
+    int   vtx4D_isFake;
+    int   vtx3D_isFake;
+    //double rho;
+    //double rho_calo;
     // -- info of electron work point
-    vector<double> electron_sigmaIetaIeta;
+    vector<string> electron_looseid;
+    /*vector<double> electron_sigmaIetaIeta;
     vector<double> electron_dEtaInSeed;
     vector<double> electron_dPhiIn;
     vector<double> electron_hoe;
@@ -103,24 +105,25 @@ struct eventInfo {
     vector<double> electron_pf_isolation;
     vector<double> electron_pf_isolation_calo;
     vector<double> electron_ooEmooP;
-    vector<double> electron_mHits;
+    vector<unsigned> electron_mHits;
     vector<bool>   electron_pass_conversion_veto;
-    vector<double> electronsc_eta;
+    */
     // -- store the dr between the electron and pfCand, the use it to find the dr of veto cone.
-    vector<float> drep;
-    vector<float> electron_pt;
-    vector<float> electron_eta;
-    vector<float> electron_phi;
-    vector<float> electron_dz4D;
-    vector<float> electron_dxy4D;
-    vector<float> electron_dz3D;
-    vector<float> electron_dxy3D;
-    vector<float> electron_t;
-    vector<int>   electron_isPrompt;
-    vector<int>   electron_isMatchedToGenJet;
-    vector<int>   electron_isMatchedToGenJet2;
-    vector<int>   electron_isFromTauDecay;
-    vector<float> electron_r9;
+    //vector<float> drep;
+    vector<float>  electron_pt;
+    vector<float>  electron_eta;
+    vector<double> electronsc_eta;
+    vector<float>  electron_phi;
+    vector<float>  electron_dz4D;
+    vector<float>  electron_dxy4D;
+    vector<float>  electron_dz3D;
+    vector<float>  electron_dxy3D;
+    vector<float>  electron_t;
+    vector<int>    electron_isPrompt;
+    vector<int>    electron_isMatchedToGenJet;
+    vector<int>    electron_isMatchedToGenJet2;
+    vector<int>    electron_isFromTauDecay;
+    vector<float>  electron_r9;
 
     vector<float> electron_chIso_dZ05_simVtx;
     vector<float> electron_chIso_dZ05_dT_simVtx;
@@ -202,8 +205,8 @@ private:
     */
     //--- outputs
     edm::Service<TFileService> fs_;
-    TTree*                     eventTree[10];
-    eventInfo                  evInfo[10];
+    TTree*                     eventTree[5];
+    eventInfo                  evInfo[5];
 
     //--- options
     vector<double> timeResolutions_;
@@ -216,9 +219,9 @@ private:
     bool           isAOD_;
 };
 
-bool  isPromptElectron(const reco::GsfElectron& electron, const edm::View<reco::GenParticle>& genParticles);
-bool  isMatchedToGenJet(const reco::GsfElectron& electron, const edm::View<reco::GenJet>& genJet);
-bool  isMatchedToGenJet2(const reco::GsfElectron& electron, const edm::View<reco::GenJet>& genJets);
-bool  isFromTau(const reco::GsfElectron& electron, const edm::View<reco::GenParticle>& genParticles);
-float Get_dEtaInSeed(const reco::GsfElectron& ele);
-float Get_epCut(const reco::Candidate& ele);
+bool isPromptElectron(const reco::GsfElectron& electron, const edm::View<reco::GenParticle>& genParticles);
+bool isMatchedToGenJet(const reco::GsfElectron& electron, const edm::View<reco::GenJet>& genJet);
+bool isMatchedToGenJet2(const reco::GsfElectron& electron, const edm::View<reco::GenJet>& genJets);
+bool isFromTau(const reco::GsfElectron& electron, const edm::View<reco::GenParticle>& genParticles);
+//float Get_dEtaInSeed(const reco::GsfElectron& ele);
+//float Get_epCut(const reco::Candidate& ele);

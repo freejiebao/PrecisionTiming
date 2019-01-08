@@ -13,7 +13,7 @@ inputFilesAOD = cms.untracked.vstring(
     )
 inputFilesGenSimReco = cms.untracked.vstring(
     # GEN-SIM-RECO test files from /DYToLL-M-50_0J_14TeV-madgraphMLM-pythia8/PhaseIITDRFall17DR-PU200_93X_upgrade2023_realistic_v2-v1/GEN-SIM-RECO
-    '/store/mc/PhaseIITDRFall17DR/DYToLL-M-50_0J_14TeV-madgraphMLM-pythia8/GEN-SIM-RECO/PU200_93X_upgrade2023_realistic_v2-v1/00000/0051AD4B-31AF-E711-8324-7845C4FC3683.root',
+    '/store/mc/PhaseIITDRFall17DR/DYToLL-M-50_0J_14TeV-madgraphMLM-pythia8/GEN-SIM-RECO/noPU_93X_upgrade2023_realistic_v2-v1/00000/9EAB1B49-92AD-E711-9215-141877411EA2.root',
     )
 #inputFilesMiniAOD = cms.untracked.vstring(
     # MiniAOD test files from /DYJetsToLL_M-50_13TeV-madgraph-pythia8/Phys14DR-PU20bx25_PHYS14_25_V1-v1/MINIAODSIM
@@ -24,6 +24,7 @@ inputFilesGenSimReco = cms.untracked.vstring(
 # You can list here either AOD or miniAOD files, but not both types mixed
 #
 useAOD = False
+#useAOD = True
 
 if useAOD == True :
     inputFiles = inputFilesAOD
@@ -75,10 +76,11 @@ process.analysis = cms.EDAnalyzer(
     saveTracks = cms.untracked.bool(True),
     maxDz = cms.untracked.double(0.1),
     minDr = cms.untracked.double(0.01),
-    isAOD=cms.untracked.bool(True),
+    isAOD=cms.untracked.bool(False),
+    #isAOD=cms.untracked.bool(True),
     minTrackPt = cms.untracked.double(0.0),
     Rho=cms.InputTag("fixedGridRhoFastjetAll"),
-    Rho_Calo=cms.InputTag("fixedGridRhoFastjetAllCalo"),
+    #Rho_Calo=cms.InputTag("fixedGridRhoFastjetAllCalo"),
     useVertexClosestToGen = cms.untracked.bool(True),
     effAreasConfigFile = cms.FileInPath("RecoEgamma/ElectronIdentification/data/Fall17/effAreaElectrons_cone03_pfNeuHadronsAndPhotons_94X.txt"),
     #conversionTag        = cms.untracked.InputTag("allConversions"),
