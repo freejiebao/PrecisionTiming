@@ -620,7 +620,7 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
         }  // end loop over time resolutions
     }      // end loop over barrel electrons
 
-    electronIndex = 0;
+    electronIndex = -1;
     // -- start loop over endcap electrons
     for (unsigned int iele = 0; iele < endcapElectrons.size(); iele++) {
 
@@ -1020,7 +1020,9 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
 
     // --- fill the tree
     for (unsigned int iRes = 0; iRes < timeResolutions_.size(); iRes++) {
-        eventTree[iRes]->Fill();
+        if (electronIndex != -1) {
+            eventTree[iRes]->Fill();
+        }
     }
 
     /*
