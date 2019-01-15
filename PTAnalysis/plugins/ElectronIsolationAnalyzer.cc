@@ -494,7 +494,7 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
                         double rnd = gRandom->Gaus(0., extra_resol);
                         //cout << "target time resol = "<< targetTimeResol << "  extra_resol = "<< extra_resol << "  rnd = " << rnd <<endl;
                         time[iRes] = pfcand.time() + rnd;
-                        dtsim      = std::abs(time[iRes] - genPV.position().t());
+                        dtsim      = std::abs(time[iRes] - genPV.position().t() * 1000000000.);
                         cout << "dasim:" << dtsim << endl;
                         dt    = std::abs(time[iRes] - vtx4D.t());
                         dtele = std::abs(time[iRes] - elecTime);
@@ -875,7 +875,7 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
                         double rnd = gRandom->Gaus(0., extra_resol);
                         //cout << "target time resol = "<< targetTimeResol << "  extra_resol = "<< extra_resol << "  rnd = " << rnd <<endl;
                         time[iRes] = pfcand.time() + rnd;
-                        dtsim      = std::abs(time[iRes] - genPV.position().t());
+                        dtsim      = std::abs(time[iRes] - genPV.position().t() * 1000000000.);
                         cout << "dasim:" << dtsim << endl;
                         dt    = std::abs(time[iRes] - vtx4D.t());
                         dtele = std::abs(time[iRes] - elecTime);
