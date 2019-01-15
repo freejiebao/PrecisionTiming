@@ -18,35 +18,32 @@ crab status -d crab_QCD_noPU
 crab status -d crab_QCD_PU200_ext
 crab status -d crab_QCD_PU200
 
+
 crab status -d crab_DY_PU200_GEN-SIM-RECO_ext
-crab status -d crab_DY_PU200_GEN-SIM-RECO
-crab status -d crab_QCD_PU200_GEN-SIM-RECO_ext
 crab status -d crab_QCD_PU200_GEN-SIM-RECO
 crab status -d crab_QCD_noPU_GEN-SIM-RECO
 crab status -d crab_DY_1J_PU200_GEN-SIM-RECO
 crab status -d crab_DY_1J_PU200_GEN-SIM-RECO_ext
 crab status -d crab_DY_1J_noPU_GEN-SIM-RECO
 crab status -d crab_DY_2J_PU200_GEN-SIM-RECO
-crab status -d crab_DY_2J_PU200_GEN-SIM-RECO_ext
 crab status -d crab_DY_2J_noPU_GEN-SIM-RECO
 crab status -d crab_DY_3J_PU200_GEN-SIM-RECO
-crab status -d crab_DY_3J_noPU_GEN-SIM-RECO
+
+finished:
+
 crab status -d crab_DY_noPU_GEN-SIM-RECO
-
-can be used:
-
 crab status -d crab_DY_PU200_GEN-SIM-RECO
-crab status -d crab_QCD_PU200_GEN-SIM-RECO
-crab status -d crab_DY_1J_PU200_GEN-SIM-RECO
-crab status -d crab_DY_1J_PU200_GEN-SIM-RECO_ext
-crab status -d crab_DY_1J_noPU_GEN-SIM-RECO
-crab status -d crab_DY_2J_PU200_GEN-SIM-RECO
-crab status -d crab_DY_2J_noPU_GEN-SIM-RECO
-crab status -d crab_DY_3J_PU200_GEN-SIM-RECO
+crab status -d crab_QCD_PU200_GEN-SIM-RECO_ext
+crab status -d crab_DY_2J_PU200_GEN-SIM-RECO_ext
 crab status -d crab_DY_3J_noPU_GEN-SIM-RECO
 
+on tape
+crab_DY_2J_noPU_GEN-SIM-RECO
+crab_DY_3J_PU200_GEN-SIM-RECO
+crab_DY_1J_noPU_GEN-SIM-RECO
 
-DY_noPU_GEN-SIM-RECO
-DY_2J_PU200_GEN-SIM-RECO_ext
-QCD_noPU_GEN-SIM-RECO
-DY_PU200_GEN-SIM-RECO_ext
+delete crab_DY_3J_noPU_GEN-SIM-RECO
+delete crab_DY_2J_PU200_GEN-SIM-RECO_ext
+crab_QCD_PU200_GEN-SIM-RECO_ext
+delete crab_DY_PU200_GEN-SIM-RECO
+delete crab_DY_noPU_GEN-SIM-RECO
