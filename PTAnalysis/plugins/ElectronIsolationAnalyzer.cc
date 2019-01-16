@@ -240,8 +240,9 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
     const reco::Vertex& vtx3D = vertices3D[pv_index_3D];
     const reco::Vertex& vtx4D = vertices4D[pv_index_4D];
 
-    int       electronIndex = -1;
-    const int nResol        = timeResolutions_.size();
+    int       electronIndex  = -1;
+    int       electron_count = -1;
+    const int nResol         = timeResolutions_.size();
     // -- start loop over barrel electrons
     for (unsigned int iele = 0; iele < barrelElectrons.size(); iele++) {
 
@@ -255,6 +256,7 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
         //if (fabs(electron.superCluster()->eta()) > 1.479)
         //    continue;
         electronIndex++;
+        electron_count++;
         // -- check if prompt or fake electron
         bool      isPromptEle    = isPromptElectron(electron, genParticles);
         bool      isMatchedJet   = isMatchedToGenJet(electron, genJets);
@@ -634,6 +636,7 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
         if (!(electron.superCluster()->eta() > 1.479 && electron.superCluster()->eta() < 2.5))
             continue;
         electronIndex++;
+        electron_count++;
         // -- check if prompt or fake electron
         bool      isPromptEle    = isPromptElectron(electron, genParticles);
         bool      isMatchedJet   = isMatchedToGenJet(electron, genJets);
@@ -1020,7 +1023,7 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
 
     // --- fill the tree
     for (unsigned int iRes = 0; iRes < timeResolutions_.size(); iRes++) {
-        if (electronIndex != -1) {
+        if (electron_count != -1) {
             eventTree[iRes]->Fill();
         }
     }
