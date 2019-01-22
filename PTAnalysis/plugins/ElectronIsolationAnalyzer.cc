@@ -633,7 +633,7 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
             continue;
         if (electron.gsfTrack().isNull())
             continue;
-        if (!(electron.superCluster()->eta() > 1.479 && electron.superCluster()->eta() < 2.5))
+        if (!(fabs(electron.superCluster()->eta()) > 1.479 && fabs(electron.superCluster()->eta()) < 2.5))
             continue;
         electronIndex++;
         electron_count++;
