@@ -4,6 +4,9 @@ process = cms.Process("Analysis")
 
 process.load("FWCore.MessageService.MessageLogger_cfi")
 
+from RecoLocalCalo.HGCalRecProducers.HGCalRecHit_cfi import dEdX_weights as dEdX
+process.load('EgammaTools.EgammaAnalysis.HGCalElectronFilter_cfi')
+
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(100) )
 process.MessageLogger.cerr.FwkReport.reportEvery = cms.untracked.int32( 10 )
 
@@ -64,7 +67,7 @@ process.analysis = cms.EDAnalyzer(
     VertexTag4D  = cms.InputTag("offlinePrimaryVertices4D"),
     PileUpTag    = cms.InputTag("addPileupInfo"),
     barrelElectronsTag   = cms.untracked.InputTag("gedGsfElectrons"),
-    endcapElectronsTag   = cms.untracked.InputTag("ecalDrivenGsfElectronsFromMultiCl"),
+    endcapElectronsTag   = cms.untracked.InputTag("cleanedEcalDrivenGsfElectronsFromMultiCl"),
     TracksTag    = cms.InputTag("generalTracks"),
     TrackTimeValueMapTag = cms.InputTag("trackTimeValueMapProducer","generalTracksConfigurableFlatResolutionModel"),
     PFCandidateTag = cms.InputTag("particleFlow", "", "RECO"),
@@ -79,10 +82,14 @@ process.analysis = cms.EDAnalyzer(
     isAOD=cms.untracked.bool(False),
     #isAOD=cms.untracked.bool(True),
     minTrackPt = cms.untracked.double(0.0),
-    Rho=cms.InputTag("fixedGridRhoFastjetAll"),
-    #Rho_Calo=cms.InputTag("fixedGridRhoFastjetAllCalo"),
+    #Rho=cms.InputTag("fixedGridRhoFastjetAll"),
     useVertexClosestToGen = cms.untracked.bool(True),
-    effAreasConfigFile = cms.FileInPath("RecoEgamma/ElectronIdentification/data/Fall17/effAreaElectrons_cone03_pfNeuHadronsAndPhotons_94X.txt"),
+    #barrelLowPt = cms.FileInPath('EgammaTools/EgammaAnalysis/data/EIDmva_EB_1020_oldbarreltdrDR01_BDT.weights.xml'),
+    #barrelHighPt = cms.FileInPath('EgammaTools/EgammaAnalysis/data/EIDmva_EB_20_oldbarreltdrDR01_BDT.weights.xml'),
+    #endcapLowPt = cms.FileInPath('EgammaTools/EgammaAnalysis/data/HGCEIDmva_1020_trackepshowernoisolonghgcaltdrV3DR01preselmatch_BDT.weights.xml'),
+    #endcapHighPt = cms.FileInPath('EgammaTools/EgammaAnalysis/data/HGCEIDmva_20_trackepshowernoisolonghgcaltdrV3DR01preselmatch_BDT.weights.xml'),
+    #effAreasConfigFile = cms.FileInPath("RecoEgamma/ElectronIdentification/data/Fall17/effAreaElectrons_cone03_pfNeuHadronsAndPhotons_94X.txt"),
+
     #conversionTag        = cms.untracked.InputTag("allConversions"),
     #beamspotTag = cms.untracked.InputTag("offlineBeamSpot")
     #
@@ -95,8 +102,7 @@ process.analysis = cms.EDAnalyzer(
 )
 
 # Output TFile
-process.TFileService = cms.Service("TFileService",
-                                   fileName = cms.string(outputFile))
+process.TFileService = cms.Service("TFileService",fileName = cms.string(outputFile))
 # Make sure to add the ID sequence upstream from the user analysis module
-process.p = cms.Path(process.analysis)
+process.p = cms.Path(process.cleanedEcalDrivenGsfElectronsFromMultiCl * process.analysis)
 #process.p = cms.Path(process.egmGsfElectronIDSequence * process.analysis)

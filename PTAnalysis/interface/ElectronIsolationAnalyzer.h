@@ -96,7 +96,7 @@ struct eventInfo {
     //double rho;
     //double rho_calo;
     // -- info of electron work point
-    vector<string> electron_looseid;
+    //vector<string> electron_looseid;
     /*vector<double> electron_sigmaIetaIeta;
     vector<double> electron_dEtaInSeed;
     vector<double> electron_dPhiIn;
@@ -124,12 +124,13 @@ struct eventInfo {
     vector<int>    electron_isMatchedToGenJet2;
     vector<int>    electron_isFromTauDecay;
     vector<float>  electron_r9;
-
-    vector<float> electron_chIso_dZ05_simVtx;
-    vector<float> electron_chIso_dZ05_dT_simVtx;
+    vector<double> electron_bdtid;
 
     vector<float> electron_chIso_dZ1_simVtx;
     vector<float> electron_chIso_dZ1_dT_simVtx;
+
+    vector<float> electron_chIso_dZ05_simVtx;
+    vector<float> electron_chIso_dZ05_dT_simVtx;
 
     vector<float> electron_chIso_dZ2_simVtx;
     vector<float> electron_chIso_dZ2_dT_simVtx;
@@ -154,6 +155,7 @@ struct eventInfo {
 
     vector<float> electron_chIso_dZele2;
     vector<float> electron_chIso_dZele2_dTele;
+
     /*
     vector<int> passVetoId;
     vector<int> passLooseId;

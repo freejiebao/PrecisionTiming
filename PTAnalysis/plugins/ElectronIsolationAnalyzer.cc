@@ -17,6 +17,7 @@
 //
 
 // system include files
+#include <iomanip>
 #include <iostream>
 #include <memory>
 
@@ -25,12 +26,14 @@
 #include "FWCore/Framework/interface/Frameworkfwd.h"
 
 #include "DataFormats/Math/interface/deltaR.h"
+#include "EgammaTools/EgammaAnalysis/interface/ElectronBDTHelper.h"
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/Framework/interface/MakerMacros.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "PrecisionTiming/PTAnalysis/interface/ElectronIsolationAnalyzer.h"
 #include <TMath.h>
 #include <TRandom.h>
+
 //
 // class declaration
 //
@@ -137,13 +140,16 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
     iEvent.getByToken(RhoToken_, rhoH);
     double rho_ = rhoH.isValid() ? (float)(*rhoH) : 0;
 
+    // -- PhaseIITDR BDT ID
+    ElectronIDHelper* eIDHelper_;
+    bdtHelper_->setElectonIDHelper(eIDHelper_);
     // -- get the rho_calo Value
     /*Handle<double> rhoCaloH;
     iEvent.getByToken(RhoCaloToken_, rhoCaloH);
     double rho_calo_ = rhoCaloH.isValid() ? (float)(*rhoCaloH) : 0;*/
 
-    iEvent.getByLabel("allConversions", _convs);
-    iEvent.getByLabel("offlineBeamSpot", _thebs);
+    //iEvent.getByLabel("allConversions", _convs);
+    //iEvent.getByLabel("offlineBeamSpot", _thebs);
     /*
     // -- get conversion collection
     Handle<reco::ConversionCollection> convsH;
@@ -249,7 +255,9 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
         const reco::GsfElectron& electron = barrelElectrons[iele];
 
         // -- minimal checks
-        if (electron.pt() < 5.)
+        if (electron.pt() < 10.)
+            continue;
+        if (!electron.isEB())
             continue;
         if (electron.gsfTrack().isNull())
             continue;
@@ -258,11 +266,11 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
         electronIndex++;
         electron_count++;
         // -- check if prompt or fake electron
-        bool      isPromptEle    = isPromptElectron(electron, genParticles);
-        bool      isMatchedJet   = isMatchedToGenJet(electron, genJets);
-        bool      isMatchedJet2  = isMatchedToGenJet2(electron, genJets);
-        bool      isFromTauDecay = isFromTau(electron, genParticles);
-        bitset<8> looseid;
+        bool isPromptEle    = isPromptElectron(electron, genParticles);
+        bool isMatchedJet   = isMatchedToGenJet(electron, genJets);
+        bool isMatchedJet2  = isMatchedToGenJet2(electron, genJets);
+        bool isFromTauDecay = isFromTau(electron, genParticles);
+        //bitset<8> looseid;
         // -- Look up and save the ID decisions
         /*float sieieCut          = 0.0112;
         float dEtaSeedCut       = 0.00377;
@@ -288,8 +296,9 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
         bool isPassTight_  = (*tight_id_decisions)[el];*/
 
         // -- compute charged isolations
+        float chIso_dZ1_simVtx = 0.;
+        float chIso_dZ1_dT_simVtx[nResol];
         float chIso_dZ05_simVtx = 0.;
-        float chIso_dZ1_simVtx  = 0.;
         float chIso_dZ2_simVtx  = 0.;
         float chIso_dZ05        = 0.;
         float chIso_dZ1         = 0.;
@@ -300,7 +309,6 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
         float chIso_dZele2      = 0.;
 
         float chIso_dZ05_dT_simVtx[nResol];
-        float chIso_dZ1_dT_simVtx[nResol];
         float chIso_dZ2_dT_simVtx[nResol];
         float chIso_dZ05_dT[nResol];
         float chIso_dZ1_dT[nResol];
@@ -313,8 +321,8 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
 
         // -- initialize
         for (unsigned int iRes = 0; iRes < timeResolutions_.size(); iRes++) {
-            chIso_dZ05_dT_simVtx[iRes] = 0.;
             chIso_dZ1_dT_simVtx[iRes]  = 0.;
+            chIso_dZ05_dT_simVtx[iRes] = 0.;
             chIso_dZ2_dT_simVtx[iRes]  = 0.;
             chIso_dZ05_dT[iRes]        = 0.;
             chIso_dZ1_dT[iRes]         = 0.;
@@ -356,7 +364,7 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
             }*/
         }
         // -- firstly, get the electron time
-
+        /*
         // -- compute loose electron ID
         //
         // -- full5x5_sigmaIetaIeta
@@ -371,7 +379,6 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
         // -- relIsoWithEA
         float eA           = effectiveAreas_.EffectiveAreas::getEffectiveArea(fabs(electron.superCluster()->eta()));
         float pf_isolation = ((electron.pfIsolationVariables().sumChargedHadronPt + std::max(0., electron.pfIsolationVariables().sumNeutralHadronEt + electron.pfIsolationVariables().sumPhotonEt - eA * rho_)) / electron.pt());
-        /*float pf_isolation_calo = ((electron.pfIsolationVariables().sumChargedHadronPt + std::max(0., electron.pfIsolationVariables().sumNeutralHadronEt + electron.pfIsolationVariables().sumPhotonEt - eA * rho_calo_)) / electron.pt());*/
         // --  EleEInverseMinusPInverseCut
         double ooEmooP = fabs((1.0 - electron.eSuperClusterOverP()) / electron.ecalEnergy());
         // -- expected missing inner hits
@@ -407,6 +414,7 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
             looseid[0] = 1;
         }
         std::string looseid_string = looseid.to_string<char, std::string::traits_type, std::string::allocator_type>();
+        */
         // -- loop over charged pf candidates
         for (unsigned icand = 0; icand < pfcands.size(); ++icand) {
             const reco::PFCandidate& pfcand = pfcands[icand];
@@ -442,11 +450,11 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
             // --- no timing
             if (dr > minDr_ && dr < isoConeDR_) {
                 // -- sim vertex
-                if (dzsim < 0.05 && dxysim < 0.02) {
-                    chIso_dZ05_simVtx += pfcand.pt();
-                }
                 if (dzsim < 0.1 && dxysim < 0.02) {
                     chIso_dZ1_simVtx += pfcand.pt();
+                }
+                if (dzsim < 0.05 && dxysim < 0.02) {
+                    chIso_dZ05_simVtx += pfcand.pt();
                 }
                 if (dzsim < 0.2 && dxysim < 0.02) {
                     chIso_dZ2_simVtx += pfcand.pt();
@@ -508,12 +516,13 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
                     }
 
                     // -- sim vertex
-                    if (dtsim < 3 * targetTimeResol && dzsim < 0.05 && dxysim < 0.02) {
-                        chIso_dZ05_dT_simVtx[iRes] += pfcand.pt();
-                    }
                     if (dtsim < 3 * targetTimeResol && dzsim < 0.1 && dxysim < 0.02) {
                         chIso_dZ1_dT_simVtx[iRes] += pfcand.pt();
                     }
+                    if (dtsim < 3 * targetTimeResol && dzsim < 0.05 && dxysim < 0.02) {
+                        chIso_dZ05_dT_simVtx[iRes] += pfcand.pt();
+                    }
+
                     if (dtsim < 3 * targetTimeResol && dzsim < 0.2 && dxysim < 0.02) {
                         chIso_dZ2_dT_simVtx[iRes] += pfcand.pt();
                     }
@@ -544,7 +553,6 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
                     if (dtele < sqrt(2) * 3 * targetTimeResol && dzele < 0.2) {
                         chIso_dZele2_dTele[iRes] += pfcand.pt();
                     }
-
                     // -- save info for tracks in the isolation cone (only for DR = 0.3)
                     if (saveTracks_ && (dz4D < 1.0 || dz3D < 1. || dzele < 1.)) {  // save a subset of tracks with loose dz selection
                         evInfo[iRes].track_t.push_back(time[iRes]);
@@ -568,7 +576,7 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
             evInfo[iRes].electronsc_eta.push_back(electron.superCluster()->eta());
             evInfo[iRes].electron_phi.push_back(electron.phi());
             // -- info of electron work point
-            evInfo[iRes].electron_looseid.push_back(looseid_string);
+            //evInfo[iRes].electron_looseid.push_back(looseid_string);
             /*evInfo[iRes].electron_sigmaIetaIeta.push_back(sigmaIEtaIEta);
             evInfo[iRes].electron_dEtaInSeed.push_back(dEtaInSeed);
             evInfo[iRes].electron_dPhiIn.push_back(dPhiIn);
@@ -579,6 +587,8 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
             evInfo[iRes].electron_ooEmooP.push_back(ooEmooP);
             evInfo[iRes].electron_mHits.push_back(mHits);
             evInfo[iRes].electron_pass_conversion_veto.push_back(pass_conversion_veto);*/
+            // -- BDT ID
+            evInfo[iRes].electron_bdtid.push_back(bdtHelper_->computeBDT(electron));
 
             evInfo[iRes].electron_dz4D.push_back(electron.gsfTrack()->dz(vtx4D.position()));
             evInfo[iRes].electron_dxy4D.push_back(electron.gsfTrack()->dxy(vtx4D.position()));
@@ -590,11 +600,12 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
             evInfo[iRes].electron_isMatchedToGenJet2.push_back(isMatchedJet2);
             evInfo[iRes].electron_isFromTauDecay.push_back(isFromTauDecay);
             evInfo[iRes].electron_r9.push_back(electron.r9());
-            evInfo[iRes].electron_chIso_dZ05_simVtx.push_back(chIso_dZ05_simVtx);
-            evInfo[iRes].electron_chIso_dZ05_dT_simVtx.push_back(chIso_dZ05_dT_simVtx[iRes]);
 
             evInfo[iRes].electron_chIso_dZ1_simVtx.push_back(chIso_dZ1_simVtx);
             evInfo[iRes].electron_chIso_dZ1_dT_simVtx.push_back(chIso_dZ1_dT_simVtx[iRes]);
+
+            evInfo[iRes].electron_chIso_dZ05_simVtx.push_back(chIso_dZ05_simVtx);
+            evInfo[iRes].electron_chIso_dZ05_dT_simVtx.push_back(chIso_dZ05_dT_simVtx[iRes]);
 
             evInfo[iRes].electron_chIso_dZ2_simVtx.push_back(chIso_dZ2_simVtx);
             evInfo[iRes].electron_chIso_dZ2_dT_simVtx.push_back(chIso_dZ2_dT_simVtx[iRes]);
@@ -629,20 +640,20 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
         const reco::GsfElectron& electron = endcapElectrons[iele];
 
         // -- minimal checks
-        if (electron.pt() < 5.)
+        if (electron.pt() < 10.)
             continue;
         if (electron.gsfTrack().isNull())
             continue;
-        if (!(fabs(electron.superCluster()->eta()) > 1.479 && fabs(electron.superCluster()->eta()) < 2.5))
+        if (electron.isEB())
             continue;
         electronIndex++;
         electron_count++;
         // -- check if prompt or fake electron
-        bool      isPromptEle    = isPromptElectron(electron, genParticles);
-        bool      isMatchedJet   = isMatchedToGenJet(electron, genJets);
-        bool      isMatchedJet2  = isMatchedToGenJet2(electron, genJets);
-        bool      isFromTauDecay = isFromTau(electron, genParticles);
-        bitset<8> looseid;
+        bool isPromptEle    = isPromptElectron(electron, genParticles);
+        bool isMatchedJet   = isMatchedToGenJet(electron, genJets);
+        bool isMatchedJet2  = isMatchedToGenJet2(electron, genJets);
+        bool isFromTauDecay = isFromTau(electron, genParticles);
+        //bitset<8> looseid;
         // -- Look up and save the ID decisions
         /*float sieieCut          = 0.0112;
         float dEtaSeedCut       = 0.00377;
@@ -668,8 +679,10 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
         bool isPassTight_  = (*tight_id_decisions)[el];*/
 
         // -- compute charged isolations
+        float chIso_dZ1_simVtx = 0.;
+        float chIso_dZ1_dT_simVtx[nResol];
+
         float chIso_dZ05_simVtx = 0.;
-        float chIso_dZ1_simVtx  = 0.;
         float chIso_dZ2_simVtx  = 0.;
         float chIso_dZ05        = 0.;
         float chIso_dZ1         = 0.;
@@ -680,7 +693,6 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
         float chIso_dZele2      = 0.;
 
         float chIso_dZ05_dT_simVtx[nResol];
-        float chIso_dZ1_dT_simVtx[nResol];
         float chIso_dZ2_dT_simVtx[nResol];
         float chIso_dZ05_dT[nResol];
         float chIso_dZ1_dT[nResol];
@@ -689,12 +701,14 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
         float chIso_dZele05_dTele[nResol];
         float chIso_dZele1_dTele[nResol];
         float chIso_dZele2_dTele[nResol];
+
         float time[nResol];
 
         // -- initialize
         for (unsigned int iRes = 0; iRes < timeResolutions_.size(); iRes++) {
+            chIso_dZ1_dT_simVtx[iRes] = 0.;
+
             chIso_dZ05_dT_simVtx[iRes] = 0.;
-            chIso_dZ1_dT_simVtx[iRes]  = 0.;
             chIso_dZ2_dT_simVtx[iRes]  = 0.;
             chIso_dZ05_dT[iRes]        = 0.;
             chIso_dZ1_dT[iRes]         = 0.;
@@ -703,7 +717,8 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
             chIso_dZele05_dTele[iRes]  = 0.;
             chIso_dZele1_dTele[iRes]   = 0.;
             chIso_dZele2_dTele[iRes]   = 0.;
-            time[iRes]                 = 0.;
+
+            time[iRes] = 0.;
         }
 
         // -- firstly, get the electron time
@@ -736,7 +751,7 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
             }*/
         }
         // -- firstly, get the electron time
-
+        /*
         // -- compute loose electron ID
         //
         // -- full5x5_sigmaIetaIeta
@@ -751,7 +766,6 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
         // -- relIsoWithEA
         float eA           = effectiveAreas_.EffectiveAreas::getEffectiveArea(fabs(electron.superCluster()->eta()));
         float pf_isolation = ((electron.pfIsolationVariables().sumChargedHadronPt + std::max(0., electron.pfIsolationVariables().sumNeutralHadronEt + electron.pfIsolationVariables().sumPhotonEt - eA * rho_)) / electron.pt());
-        /*float pf_isolation_calo = ((electron.pfIsolationVariables().sumChargedHadronPt + std::max(0., electron.pfIsolationVariables().sumNeutralHadronEt + electron.pfIsolationVariables().sumPhotonEt - eA * rho_calo_)) / electron.pt());*/
         // --  EleEInverseMinusPInverseCut
         double ooEmooP = fabs((1.0 - electron.eSuperClusterOverP()) / electron.ecalEnergy());
         // -- expected missing inner hits
@@ -787,6 +801,7 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
             looseid[0] = 1;
         }
         std::string looseid_string = looseid.to_string<char, std::string::traits_type, std::string::allocator_type>();
+        */
         // -- loop over charged pf candidates
         for (unsigned icand = 0; icand < pfcands.size(); ++icand) {
             const reco::PFCandidate& pfcand = pfcands[icand];
@@ -824,12 +839,13 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
             // --- no timing
             if (dr > minDr_ && dr < isoConeDR_) {
                 // -- sim vertex
-                if (dzsim < 0.05 && dxysim < 0.02) {
-                    chIso_dZ05_simVtx += pfcand.pt();
-                }
                 if (dzsim < 0.1 && dxysim < 0.02) {
                     chIso_dZ1_simVtx += pfcand.pt();
                 }
+                if (dzsim < 0.05 && dxysim < 0.02) {
+                    chIso_dZ05_simVtx += pfcand.pt();
+                }
+
                 if (dzsim < 0.2 && dxysim < 0.02) {
                     chIso_dZ2_simVtx += pfcand.pt();
                 }
@@ -890,12 +906,13 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
                     }
 
                     // -- sim vertex
-                    if (dtsim < 3 * targetTimeResol && dzsim < 0.05 && dxysim < 0.02) {
-                        chIso_dZ05_dT_simVtx[iRes] += pfcand.pt();
-                    }
                     if (dtsim < 3 * targetTimeResol && dzsim < 0.1 && dxysim < 0.02) {
                         chIso_dZ1_dT_simVtx[iRes] += pfcand.pt();
                     }
+                    if (dtsim < 3 * targetTimeResol && dzsim < 0.05 && dxysim < 0.02) {
+                        chIso_dZ05_dT_simVtx[iRes] += pfcand.pt();
+                    }
+
                     if (dtsim < 3 * targetTimeResol && dzsim < 0.2 && dxysim < 0.02) {
                         chIso_dZ2_dT_simVtx[iRes] += pfcand.pt();
                     }
@@ -926,7 +943,6 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
                     if (dtele < sqrt(2) * 3 * targetTimeResol && dzele < 0.2) {
                         chIso_dZele2_dTele[iRes] += pfcand.pt();
                     }
-
                     // -- save info for tracks in the isolation cone (only for DR = 0.3)
                     if (saveTracks_ && (dz4D < 1.0 || dz3D < 1. || dzele < 1.)) {  // save a subset of tracks with loose dz selection
                         evInfo[iRes].track_t.push_back(time[iRes]);
@@ -963,6 +979,9 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
             evInfo[iRes].electron_mHits.push_back(mHits);
             evInfo[iRes].electron_pass_conversion_veto.push_back(pass_conversion_veto);*/
 
+            // -- BDT ID
+            evInfo[iRes].electron_bdtid.push_back(bdtHelper_->computeBDT(electron));
+
             evInfo[iRes].electron_dz4D.push_back(electron.gsfTrack()->dz(vtx4D.position()));
             evInfo[iRes].electron_dxy4D.push_back(electron.gsfTrack()->dxy(vtx4D.position()));
             evInfo[iRes].electron_dz3D.push_back(electron.gsfTrack()->dz(vtx3D.position()));
@@ -973,11 +992,11 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
             evInfo[iRes].electron_isMatchedToGenJet2.push_back(isMatchedJet2);
             evInfo[iRes].electron_isFromTauDecay.push_back(isFromTauDecay);
             evInfo[iRes].electron_r9.push_back(electron.r9());
-            evInfo[iRes].electron_chIso_dZ05_simVtx.push_back(chIso_dZ05_simVtx);
-            evInfo[iRes].electron_chIso_dZ05_dT_simVtx.push_back(chIso_dZ05_dT_simVtx[iRes]);
 
             evInfo[iRes].electron_chIso_dZ1_simVtx.push_back(chIso_dZ1_simVtx);
             evInfo[iRes].electron_chIso_dZ1_dT_simVtx.push_back(chIso_dZ1_dT_simVtx[iRes]);
+            evInfo[iRes].electron_chIso_dZ05_simVtx.push_back(chIso_dZ05_simVtx);
+            evInfo[iRes].electron_chIso_dZ05_dT_simVtx.push_back(chIso_dZ05_dT_simVtx[iRes]);
 
             evInfo[iRes].electron_chIso_dZ2_simVtx.push_back(chIso_dZ2_simVtx);
             evInfo[iRes].electron_chIso_dZ2_dT_simVtx.push_back(chIso_dZ2_dT_simVtx[iRes]);
@@ -1014,7 +1033,7 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
         evInfo[iRes].vtx3D_z      = vtx3D.z();
         evInfo[iRes].vtx3D_zErr   = vtx3D.zError();
         evInfo[iRes].vtxGen_z     = genPV.position().z();
-        evInfo[iRes].vtxGen_t     = genPV.position().t();
+        evInfo[iRes].vtxGen_t     = genPV.position().t() * 1000000000;
         evInfo[iRes].vtx4D_isFake = vtx4D.isFake();
         evInfo[iRes].vtx3D_isFake = vtx3D.isFake();
         //evInfo[iRes].rho          = rho_;
@@ -1027,335 +1046,6 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
             eventTree[iRes]->Fill();
         }
     }
-
-    /*
-    for (unsigned int iele = 0; iele < endcapElectrons.size(); iele++) {
-
-        const reco::GsfElectron& electron = endcapElectrons[iele];
-
-        // -- minimal checks
-        if (electron.pt() < 15.)
-            continue;
-        if (electron.gsfTrack().isNull())
-            continue;
-        if (fabs(electron.eta()) > 1.5)
-            continue;
-        electronIndex++;
-        // -- check if prompt or fake electron
-        bool isPromptEle   = isPromptElectron(electron, genParticles);
-        bool isMatchedJet  = isMatchedToGenJet(electron, genJets);
-        bool isMatchedJet2 = isMatchedToGenJet2(electron, genJets);
-
-        // -- Look up and save the ID decisions
-        auto el            = endcapElectrons.ptrAt(iele);
-        bool isPassVeto_   = (*veto_id_decisions)[el];
-        bool isPassLoose_  = (*loose_id_decisions)[el];
-        bool isPassMedium_ = (*medium_id_decisions)[el];
-        bool isPassTight_  = (*tight_id_decisions)[el];
-
-        // -- compute charged isolations
-        float chIso[nCones];
-        float chIso_dT[nCones][nResol];
-        float chIso_dT_4D[nCones][nResol];
-        float chIso_reldZ[nCones];
-        float chIso_reldZ_dT[nCones][nResol];
-        float chIso_reldZ_dT_4D[nCones][nResol];
-        float chIso_simVtx[nCones];
-        float chIso_dT_simVtx[nCones][nResol];
-        float time[nCones][nResol];
-
-        // -- initialize
-        for (unsigned int iCone = 0; iCone < isoConeDR_.size(); iCone++) {
-            chIso_simVtx[iCone] = 0.;
-            chIso[iCone]        = 0.;
-            chIso_reldZ[iCone]  = 0.;
-            for (unsigned int iRes = 0; iRes < timeResolutions_.size(); iRes++) {
-                chIso_dT_simVtx[iCone][iRes] = 0.;
-                chIso_dT[iCone][iRes]        = 0.;
-                chIso_reldZ_dT[iCone][iRes]  = 0.;
-                time[iCone][iRes]            = 0.;
-            }
-        }
-
-        // -- firstly, get the electron time
-        float        elecTime = 0.;  // record time of electron
-        float        dr_      = 99999999.;
-        for (unsigned icand = 0; icand < pfcands.size(); ++icand) {
-            const reco::PFCandidate& pfcand = pfcands[icand];
-            if (pfcand.charge() == 0)
-                continue;
-
-            // -- get the track ref
-            auto           pfcandRef = pfcands.refAt(icand);
-            reco::TrackRef trackRef  = pfcandRef->trackRef();
-            if (trackRef.isNull())
-                continue;
-            if (!trackRef->quality(reco::TrackBase::highPurity))
-                continue;
-            float dr = deltaR(electron.eta(), electron.phi(), pfcand.eta(), pfcand.phi());
-            if (dr < dr_) {
-                dr_      = dr;
-                icandTag = icand;
-                //-- get electron time from pfcand
-                elecTime = pfcand.time();
-            }
-            for (unsigned int iCone = 0; iCone < isoConeDR_.size(); iCone++) {
-                if (isoConeDR_[iCone] == 0.3 && saveTracks_) {
-                    for (unsigned int iRes = 0; iRes < timeResolutions_.size(); iRes++) {
-                        evInfo[iRes].drep.push_back(dr);
-                    }
-                }
-            }
-        }
-        // -- firstly, get the electron time
-
-        // -- loop over charged pf candidates
-        for (unsigned icand = 0; icand < pfcands.size(); ++icand) {
-            if (icand == icandTag)
-                continue;
-            const reco::PFCandidate& pfcand = pfcands[icand];
-            if (pfcand.charge() == 0)
-                continue;
-            // -- get the track ref
-            auto           pfcandRef = pfcands.refAt(icand);
-            reco::TrackRef trackRef  = pfcandRef->trackRef();
-            if (trackRef.isNull())
-                continue;
-            if (!trackRef->quality(reco::TrackBase::highPurity))
-                continue;
-            // -- get dz, dxy
-            float dz    = std::abs(trackRef->dz(vtx.position()));
-            float dz3D  = std::abs(trackRef->dz(vtx3D.position()));
-            float dz4D  = std::abs(trackRef->dz(vtx4D.position()));
-            float dxy   = std::abs(trackRef->dxy(vtx.position()));
-            float dxy3D = std::abs(trackRef->dxy(vtx3D.position()));
-            float dxy4D = std::abs(trackRef->dxy(vtx4D.position()));
-
-            float dz3Drel = std::abs(dz3D / std::sqrt(trackRef->dzError() * trackRef->dzError() + vtx3D.zError() * vtx3D.zError()));
-            float dzrel   = std::abs(dz / std::sqrt(trackRef->dzError() * trackRef->dzError() + vtx.zError() * vtx.zError()));
-            float dz4Drel = std::abs(dz / std::sqrt(trackRef->dzError() * trackRef->dzError() + vtx4D.zError() * vtx4D.zError()));
-
-            float dzsim  = std::abs(trackRef->vz() - genPV.position().z());
-            float dxysim = sqrt(pow(trackRef->vx() - genPV.position().x(), 2) + pow(trackRef->vy() - genPV.position().y(), 2));
-
-            float dr = deltaR(electron.eta(), electron.phi(), pfcand.eta(), pfcand.phi());
-
-            // --- no timing
-
-            // -- using sim vertex
-            if (dzsim < maxDz_ && dxysim < 0.02) {
-                for (unsigned int iCone = 0; iCone < isoConeDR_.size(); iCone++) {
-                    if (dr > minDr_ && dr < isoConeDR_[iCone]) {
-                        chIso_simVtx[iCone] += pfcand.pt();
-                    }
-                }
-            }
-
-            // -- using reco vtx closest to the sim one
-            if (dz3D < maxDz_ && dxy3D < 0.02) {
-                for (unsigned int iCone = 0; iCone < isoConeDR_.size(); iCone++) {
-                    if (dr > minDr_ && dr < isoConeDR_[iCone]) {
-                        chIso[iCone] += pfcand.pt();
-                    }
-                }
-            }
-
-            // -- using reco vtx closest to the sim one and cut on relative dz
-            if (dz3Drel < 3.0 && dxy3D < 0.02) {
-                for (unsigned int iCone = 0; iCone < isoConeDR_.size(); iCone++) {
-                    if (dr > minDr_ && dr < isoConeDR_[iCone]) {
-                        chIso_reldZ[iCone] += pfcand.pt();
-                    }
-                }
-            }
-
-            // --- with timing
-
-            // -- using sim vtx
-            if (dzsim < maxDz_ && dxysim < 0.02) {
-                for (unsigned int iCone = 0; iCone < isoConeDR_.size(); iCone++) {
-                    if (dr > minDr_ && dr < isoConeDR_[iCone]) {
-                        for (unsigned int iRes = 0; iRes < timeResolutions_.size(); iRes++) {
-                            double time_resol  = timeResolutions_[iRes];
-                            double extra_resol = sqrt(time_resol * time_resol - 0.03 * 0.03);
-                            cout << iRes << "  " << time_resol << "  " << extra_resol << endl;
-                            double dt         = 0.;
-                            time[iCone][iRes] = -999.;
-                            if (pfcand.isTimeValid()) {
-                                time[iCone][iRes] = pfcand.time() + gRandom->Gaus(0., extra_resol);
-                                dt                = std::abs(time[iCone][iRes] - genPV.position().t() * 1000000000.);
-                                cout << pfcand.time() << "   " << time[iCone][iRes] << "   " << genPV.position().t() * 1000000000. << endl;
-                            }
-                            else {
-                                dt = 0;
-                            }
-                            if (dt < 3 * time_resol) {
-                                chIso_dT_simVtx[iCone][iRes] += pfcand.pt();
-                            }
-                        }  // end loop over time resolutions
-                    }
-                }  // end loop over cone sizes
-            }
-
-            // -- using reco vertex closest in dz to the gen vtx
-            if (dz < maxDz_ && dxy < 0.02) {
-                for (unsigned int iCone = 0; iCone < isoConeDR_.size(); iCone++) {
-                    if (dr > minDr_ && dr < isoConeDR_[iCone]) {
-                        for (unsigned int iRes = 0; iRes < timeResolutions_.size(); iRes++) {
-                            double time_resol  = timeResolutions_[iRes];
-                            double extra_resol = sqrt(time_resol * time_resol - 0.03 * 0.03);
-                            double dt          = 0.;
-                            if (pfcand.isTimeValid()) {
-                                time[iCone][iRes] = pfcand.time() + gRandom->Gaus(0., extra_resol);
-                                //elecTime          = elecTime + gRandom->Gaus(0., extra_resol);
-                                //dt = std::abs(time[iCone][iRes] - vtx.t());
-                                dt = std::abs(time[iCone][iRes] - vtx.t());
-                                //dt                = std::abs(time[iCone][iRes] - elecTime);
-                            }
-                            else {
-                                dt = 0;
-                            }
-                            //if (dt < 3 * sqrt(2) * time_resol) {
-                            if (dt < 3 * time_resol) {
-                                chIso_dT[iCone][iRes] += pfcand.pt();
-                            }
-                        }  // end loop over time resolutions
-
-                        // save info for tracks in the isolation cone
-                        if (isoConeDR_[iCone] == 0.3 && saveTracks_) {
-                            for (unsigned int iRes = 0; iRes < timeResolutions_.size(); iRes++) {
-                                evInfo[iRes].track_dz.push_back(trackRef->dz(vtx.position()));
-                            }
-                        }
-                    }
-                }  // end loop over cone sizes
-            }
-            // -- using reco vertex closest in dz to the gen vtx with timing info: vtx4D
-            if (dz4D < maxDz_ && dxy4D < 0.02) {
-                for (unsigned int iCone = 0; iCone < isoConeDR_.size(); iCone++) {
-                    if (dr > minDr_ && dr < isoConeDR_[iCone]) {
-                        for (unsigned int iRes = 0; iRes < timeResolutions_.size(); iRes++) {
-                            double time_resol  = timeResolutions_[iRes];
-                            double extra_resol = sqrt(time_resol * time_resol - 0.03 * 0.03);
-                            double dt          = 0.;
-                            if (pfcand.isTimeValid()) {
-                                time[iCone][iRes] = pfcand.time() + gRandom->Gaus(0., extra_resol);
-                                //elecTime          = elecTime + gRandom->Gaus(0., extra_resol);
-                                //dt = std::abs(time[iCone][iRes] - vtx.t());
-                                dt = std::abs(time[iCone][iRes] - vtx4D.t());
-                                //dt                = std::abs(time[iCone][iRes] - elecTime);
-                            }
-                            else {
-                                dt = 0;
-                            }
-                            //if (dt < 3 * sqrt(2) * time_resol) {
-                            if (dt < 3 * time_resol) {
-                                chIso_dT_4D[iCone][iRes] += pfcand.pt();
-                            }
-                        }  // end loop over time resolutions
-
-                        // save info for tracks in the isolation cone
-                        if (isoConeDR_[iCone] == 0.3 && saveTracks_) {
-                            for (unsigned int iRes = 0; iRes < timeResolutions_.size(); iRes++) {
-                                evInfo[iRes].track_t.push_back(time[iCone][iRes]);
-                                evInfo[iRes].track_dz.push_back(trackRef->dz(vtx.position()));
-                                evInfo[iRes].track_dz3D.push_back(trackRef->dz(vtx3D.position()));
-                                evInfo[iRes].track_dz4D.push_back(trackRef->dz(vtx4D.position()));
-                                evInfo[iRes].track_pt.push_back(pfcand.pt());
-                                evInfo[iRes].track_eta.push_back(pfcand.eta());
-                                evInfo[iRes].track_phi.push_back(pfcand.phi());
-                                evInfo[iRes].track_elecIndex.push_back(electronIndex);
-                            }
-                        }
-                    }
-                }  // end loop over cone sizes
-            }
-
-            // -- using reco vertex closest in dz to the sim vertex and use a relative dz cut
-            if (dzrel < 3.0 && dxy < 0.02) {
-                for (unsigned int iCone = 0; iCone < isoConeDR_.size(); iCone++) {
-                    if (dr > minDr_ && dr < isoConeDR_[iCone]) {
-                        for (unsigned int iRes = 0; iRes < timeResolutions_.size(); iRes++) {
-                            double time_resol  = timeResolutions_[iRes];
-                            double extra_resol = sqrt(time_resol * time_resol - 0.03 * 0.03);
-                            double dt          = 0.;
-                            time[iCone][iRes]  = -999.;
-                            if (pfcand.isTimeValid()) {
-                                time[iCone][iRes] = pfcand.time() + gRandom->Gaus(0., extra_resol);
-                                dt                = std::abs(time[iCone][iRes] - vtx.t());
-                            }
-                            else {
-                                dt = 0;
-                            }
-                            if (dt < 3 * time_resol) {
-                                chIso_reldZ_dT[iCone][iRes] += pfcand.pt();
-                            }
-                        }  // end loop over time resolutions
-                    }
-                }  // end loop over cone sizes
-            }
-
-            // -- using reco vertex closest in dz to the sim vertex and use a relative dz cut
-            if (dz4Drel < 3.0 && dxy4D < 0.02) {
-                for (unsigned int iCone = 0; iCone < isoConeDR_.size(); iCone++) {
-                    if (dr > minDr_ && dr < isoConeDR_[iCone]) {
-                        for (unsigned int iRes = 0; iRes < timeResolutions_.size(); iRes++) {
-                            double time_resol  = timeResolutions_[iRes];
-                            double extra_resol = sqrt(time_resol * time_resol - 0.03 * 0.03);
-                            double dt          = 0.;
-                            time[iCone][iRes]  = -999.;
-                            if (pfcand.isTimeValid()) {
-                                time[iCone][iRes] = pfcand.time() + gRandom->Gaus(0., extra_resol);
-                                dt                = std::abs(time[iCone][iRes] - vtx4D.t());
-                            }
-                            else {
-                                dt = 0;
-                            }
-                            if (dt < 3 * time_resol) {
-                                chIso_reldZ_dT_4D[iCone][iRes] += pfcand.pt();
-                            }
-                        }  // end loop over time resolutions
-                    }
-                }  // end loop over cone sizes
-            }
-
-        }  // end loop over tracks
-
-        // fill electron info
-        for (unsigned int iRes = 0; iRes < timeResolutions_.size(); iRes++) {
-            evInfo[iRes].electron_pt.push_back(electron.pt());
-            evInfo[iRes].electron_eta.push_back(electron.eta());
-            evInfo[iRes].electron_phi.push_back(electron.phi());
-            evInfo[iRes].electron_dz.push_back(electron.gsfTrack()->dz(vtx.position()));
-            evInfo[iRes].electron_dxy.push_back(electron.gsfTrack()->dxy(vtx.position()));
-            evInfo[iRes].electron_dz3D.push_back(electron.gsfTrack()->dz(vtx3D.position()));
-            evInfo[iRes].electron_dxy3D.push_back(electron.gsfTrack()->dxy(vtx3D.position()));
-            evInfo[iRes].electron_dz4D.push_back(electron.gsfTrack()->dz(vtx4D.position()));
-            evInfo[iRes].electron_dxy4D.push_back(electron.gsfTrack()->dxy(vtx4D.position()));
-            evInfo[iRes].electron_t.push_back(elecTime);
-            evInfo[iRes].electron_isPrompt.push_back(isPromptEle);
-            evInfo[iRes].electron_isMatchedToGenJet.push_back(isMatchedJet);
-            evInfo[iRes].electron_isMatchedToGenJet2.push_back(isMatchedJet2);
-            evInfo[iRes].electron_r9.push_back(electron.r9());
-            evInfo[iRes].electron_sigmaIetaIeta.push_back(electron.sigmaIetaIeta());
-            evInfo[iRes].passVetoId.push_back((int)isPassVeto_);
-            evInfo[iRes].passLooseId.push_back((int)isPassLoose_);
-            evInfo[iRes].passMediumId.push_back((int)isPassMedium_);
-            evInfo[iRes].passTightId.push_back((int)isPassTight_);
-
-            for (unsigned int iCone = 0; iCone < isoConeDR_.size(); iCone++) {
-                (evInfo[iRes].electron_chIso_simVtx[iCone]).push_back(chIso_simVtx[iCone]);
-                (evInfo[iRes].electron_chIso_dT_simVtx[iCone][iRes]).push_back(chIso_dT_simVtx[iCone][iRes]);
-                (evInfo[iRes].electron_chIso[iCone]).push_back(chIso[iCone]);
-                (evInfo[iRes].electron_chIso_dT[iCone][iRes]).push_back(chIso_dT[iCone][iRes]);
-                (evInfo[iRes].electron_chIso_dT_4D[iCone][iRes]).push_back(chIso_dT_4D[iCone][iRes]);
-                (evInfo[iRes].electron_chIso_reldZ[iCone]).push_back(chIso_reldZ[iCone]);
-                (evInfo[iRes].electron_chIso_reldZ_dT[iCone][iRes]).push_back(chIso_reldZ_dT[iCone][iRes]);
-                (evInfo[iRes].electron_chIso_reldZ_dT_4D[iCone][iRes]).push_back(chIso_reldZ_dT_4D[iCone][iRes]);
-            }
-        }
-    }  // end loop over endcap electrons
-   */
 }  // end analyze event
 
 // ------------ method called once each job just before starting event loop  ------------
@@ -1386,7 +1076,10 @@ void ElectronIsolationAnalyzer::beginJob() {
         eventTree[iRes]->Branch("electron_isPrompt", &evInfo[iRes].electron_isPrompt);
         eventTree[iRes]->Branch("electron_isMatchedToGenJet", &evInfo[iRes].electron_isMatchedToGenJet);
         eventTree[iRes]->Branch("electron_isFromTauDecay", &evInfo[iRes].electron_isFromTauDecay);
-        eventTree[iRes]->Branch("electron_looseid", &evInfo[iRes].electron_looseid);
+        // -- BDT ID
+        eventTree[iRes]->Branch("electron_bdtid", &evInfo[iRes].electron_bdtid);
+
+        //eventTree[iRes]->Branch("electron_looseid", &evInfo[iRes].electron_looseid);
         // -- info of electron work point
         /*eventTree[iRes]->Branch("rho", &evInfo[iRes].rho);
         eventTree[iRes]->Branch("rho_calo", &evInfo[iRes].rho_calo);
@@ -1401,11 +1094,11 @@ void ElectronIsolationAnalyzer::beginJob() {
         eventTree[iRes]->Branch("electron_mHits", &evInfo[iRes].electron_mHits);
         eventTree[iRes]->Branch("electron_pass_conversion_veto", &evInfo[iRes].electron_pass_conversion_veto);*/
 
-        eventTree[iRes]->Branch(Form("electron_chIso%.2d_dZ05_simVtx", int(isoConeDR_ * 10)), &evInfo[iRes].electron_chIso_dZ05_simVtx);
-        eventTree[iRes]->Branch(Form("electron_chIso%.2d_dZ05_dT_simVtx", int(isoConeDR_ * 10)), &evInfo[iRes].electron_chIso_dZ05_dT_simVtx);
-
         eventTree[iRes]->Branch(Form("electron_chIso%.2d_dZ1_simVtx", int(isoConeDR_ * 10)), &evInfo[iRes].electron_chIso_dZ1_simVtx);
         eventTree[iRes]->Branch(Form("electron_chIso%.2d_dZ1_dT_simVtx", int(isoConeDR_ * 10)), &evInfo[iRes].electron_chIso_dZ1_dT_simVtx);
+
+        eventTree[iRes]->Branch(Form("electron_chIso%.2d_dZ05_simVtx", int(isoConeDR_ * 10)), &evInfo[iRes].electron_chIso_dZ05_simVtx);
+        eventTree[iRes]->Branch(Form("electron_chIso%.2d_dZ05_dT_simVtx", int(isoConeDR_ * 10)), &evInfo[iRes].electron_chIso_dZ05_dT_simVtx);
 
         eventTree[iRes]->Branch(Form("electron_chIso%.2d_dZ2_simVtx", int(isoConeDR_ * 10)), &evInfo[iRes].electron_chIso_dZ2_simVtx);
         eventTree[iRes]->Branch(Form("electron_chIso%.2d_dZ2_dT_simVtx", int(isoConeDR_ * 10)), &evInfo[iRes].electron_chIso_dZ2_dT_simVtx);
@@ -1481,8 +1174,10 @@ void ElectronIsolationAnalyzer::initEventStructure() {
         evInfo[iRes].electron_eta.clear();
         evInfo[iRes].electronsc_eta.clear();
         evInfo[iRes].electron_phi.clear();
+        // -- BDT ID
+        evInfo[iRes].electron_bdtid.clear();
         // -- info of electron work point
-        evInfo[iRes].electron_looseid.clear();
+        //evInfo[iRes].electron_looseid.clear();
         /*evInfo[iRes].electron_sigmaIetaIeta.clear();
         evInfo[iRes].electron_dEtaInSeed.clear();
         evInfo[iRes].electron_dPhiIn.clear();
@@ -1520,10 +1215,10 @@ void ElectronIsolationAnalyzer::initEventStructure() {
             evInfo[iRes].electron_chIso_reldZ_dT[iCone][iRes].clear();
         }
 */
-        evInfo[iRes].electron_chIso_dZ05_simVtx.clear();
-        evInfo[iRes].electron_chIso_dZ05_dT_simVtx.clear();
         evInfo[iRes].electron_chIso_dZ1_simVtx.clear();
         evInfo[iRes].electron_chIso_dZ1_dT_simVtx.clear();
+        evInfo[iRes].electron_chIso_dZ05_simVtx.clear();
+        evInfo[iRes].electron_chIso_dZ05_dT_simVtx.clear();
         evInfo[iRes].electron_chIso_dZ2_simVtx.clear();
         evInfo[iRes].electron_chIso_dZ2_dT_simVtx.clear();
 
