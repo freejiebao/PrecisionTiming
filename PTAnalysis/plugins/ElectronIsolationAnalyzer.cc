@@ -63,6 +63,10 @@ ElectronIsolationAnalyzer::ElectronIsolationAnalyzer(const edm::ParameterSet& iC
       effectiveAreas_((iConfig.getParameter<edm::FileInPath>("effAreasConfigFile")).fullPath())
 //convsToken_(consumes<View<reco::Conversion>>(iConfig.getUntrackedParameter<edm::InputTag>("conversionSrc"))), thebsToken_(consumes<reco::BeamSpot>(iConfig.getUntrackedParameter<edm::InputTag>("beamspotSrc")))
 {
+    // -- BDT ID
+    eIDHelper_ = new ElectronIDHelper(iConfig, consumesCollector());
+    bdtHelper_ = new ElectronBDTHelper(iConfig, consumesCollector());
+
     timeResolutions_       = iConfig.getUntrackedParameter<vector<double>>("timeResolutions");
     isoConeDR_             = iConfig.getUntrackedParameter<double>("isoConeDR");
     saveTracks_            = iConfig.getUntrackedParameter<bool>("saveTracks");
@@ -141,10 +145,6 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
     double rho_ = rhoH.isValid() ? (float)(*rhoH) : 0;
 
     // -- PhaseIITDR BDT ID
-    ElectronIDHelper*  eIDHelper_;
-    ElectronBDTHelper* bdtHelper_;
-    eIDHelper_ = new ElectronIDHelper(iConfig, consumesCollector());
-    bdtHelper_ = new ElectronBDTHelper(iConfig, consumesCollector());
     bdtHelper_->setElectonIDHelper(eIDHelper_);
     // -- get the rho_calo Value
     /*Handle<double> rhoCaloH;

@@ -194,6 +194,9 @@ private:
     EDGetTokenT<double>                       RhoToken_;
     EDGetTokenT<double>                       RhoCaloToken_;
     EffectiveAreas                            effectiveAreas_;
+    // -- BDT ID
+    ElectronIDHelper*  eIDHelper_;
+    ElectronBDTHelper* bdtHelper_;
     //EDGetTokenT<View<reco::Conversion>>       convsToken_;
     //EDGetTokenT<reco::BeamSpot>               thebsToken_;
     edm::Handle<reco::ConversionCollection> _convs;
