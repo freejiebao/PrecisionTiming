@@ -63,6 +63,12 @@ ElectronIsolationAnalyzer::ElectronIsolationAnalyzer(const edm::ParameterSet& iC
       effectiveAreas_((iConfig.getParameter<edm::FileInPath>("effAreasConfigFile")).fullPath())
 //convsToken_(consumes<View<reco::Conversion>>(iConfig.getUntrackedParameter<edm::InputTag>("conversionSrc"))), thebsToken_(consumes<reco::BeamSpot>(iConfig.getUntrackedParameter<edm::InputTag>("beamspotSrc")))
 {
+    // -- BDT ID
+    ElectronIDHelper*  eIDHelper_;
+    ElectronBDTHelper* bdtHelper_;
+    eIDHelper_ = new ElectronIDHelper(iConfig, consumesCollector());
+    bdtHelper_ = new ElectronBDTHelper(iConfig, consumesCollector());
+
     timeResolutions_       = iConfig.getUntrackedParameter<vector<double>>("timeResolutions");
     isoConeDR_             = iConfig.getUntrackedParameter<double>("isoConeDR");
     saveTracks_            = iConfig.getUntrackedParameter<bool>("saveTracks");
@@ -141,7 +147,6 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
     double rho_ = rhoH.isValid() ? (float)(*rhoH) : 0;
 
     // -- PhaseIITDR BDT ID
-    ElectronIDHelper* eIDHelper_;
     bdtHelper_->setElectonIDHelper(eIDHelper_);
     // -- get the rho_calo Value
     /*Handle<double> rhoCaloH;
@@ -967,7 +972,7 @@ void ElectronIsolationAnalyzer::analyze(const edm::Event& iEvent, const edm::Eve
             evInfo[iRes].electronsc_eta.push_back(electron.superCluster()->eta());
             evInfo[iRes].electron_phi.push_back(electron.phi());
             // -- info of electron work point
-            evInfo[iRes].electron_looseid.push_back(looseid_string);
+            //evInfo[iRes].electron_looseid.push_back(looseid_string);
             /*evInfo[iRes].electron_sigmaIetaIeta.push_back(sigmaIEtaIEta);
             evInfo[iRes].electron_dEtaInSeed.push_back(dEtaInSeed);
             evInfo[iRes].electron_dPhiIn.push_back(dPhiIn);
